@@ -3,7 +3,7 @@ Systems Analysis and Design Project (CS4125)
 
 ## Brief Ideas
 
-These ideas are subject to change. Please feel free to change the markdown as you wish. 
+These ideas are subject to change. Please feel free to change the markdown as you wish.  
 
 ### Users
 
