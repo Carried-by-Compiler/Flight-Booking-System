@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  *
  * @author John Rey Juele
@@ -59,7 +58,7 @@ public class FlightsDAO implements Dao<Flight>{
             LocalDateTime dTime = LocalDateTime.parse(lineSplit[4]);
             LocalDateTime aTime = LocalDateTime.parse(lineSplit[5]);
             return new Flight(Integer.parseInt(lineSplit[0]), Integer.parseInt(lineSplit[1]),
-                lineSplit[2], lineSplit[3], dTime, aTime);
+                lineSplit[2], lineSplit[3], dTime, aTime, Double.parseDouble(lineSplit[6]));
         } else {
             return null;
         }
@@ -120,7 +119,7 @@ public class FlightsDAO implements Dao<Flight>{
                 LocalDateTime dTime = LocalDateTime.parse(lineSplit[4]);
                 LocalDateTime aTime = LocalDateTime.parse(lineSplit[5]);
                 f = new Flight(Integer.parseInt(lineSplit[0]), Integer.parseInt(lineSplit[1]),
-                    lineSplit[2], lineSplit[3], dTime, aTime);
+                    lineSplit[2], lineSplit[3], dTime, aTime, Double.parseDouble(lineSplit[6]));
                 
                 flights.add(f);
             }

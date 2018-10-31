@@ -20,13 +20,14 @@ public class Flight implements Comparable<LocalDate> {
     private String arrival;
     private LocalDateTime depTime;
     private LocalDateTime arrTime;
+    private double        cost;
     
     public Flight() {
         
     }
     
     public Flight(int id, int aid, String d, String a,
-            LocalDateTime dTime, LocalDateTime aTime) {
+            LocalDateTime dTime, LocalDateTime aTime, double c) {
         
         this.id = id;
         this.airLineID = aid;
@@ -34,6 +35,15 @@ public class Flight implements Comparable<LocalDate> {
         this.arrival = a;
         this.depTime = dTime;
         this.arrTime = aTime;
+        this.cost = c;
+    }
+    
+    public double getCost() {
+        return this.cost;
+    }
+    
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 
     public int getId() {
@@ -86,7 +96,8 @@ public class Flight implements Comparable<LocalDate> {
 
     @Override
     public String toString() {
-        return "Flight{" + "id=" + id + ", airLineID=" + airLineID + ", departure=" + departure + ", arrival=" + arrival + ", depTime=" + depTime + ", arrTime=" + arrTime + '}';
+        return "Flight{" + "id=" + id + ", airLineID=" + airLineID + ", departure=" + departure + 
+                ", arrival=" + arrival + ", depTime=" + depTime + ", arrTime=" + arrTime + "cost=" + cost + '}';
     }
     
     public String[] getDetailsAsArray() {
@@ -98,6 +109,7 @@ public class Flight implements Comparable<LocalDate> {
         details[3] = this.arrival;
         details[4] = this.depTime.toString();
         details[5] = this.arrTime.toString();
+        details[6] = String.valueOf(this.cost);
         
         return details;
     }

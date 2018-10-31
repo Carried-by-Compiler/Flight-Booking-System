@@ -23,9 +23,9 @@ public class FlightsManager {
     }
     
     public void addFlight(int id, int aid, String dep, String arr, 
-            LocalDateTime dTime, LocalDateTime aTime) {
+            LocalDateTime dTime, LocalDateTime aTime, double cost) {
         
-        Flight f = new Flight(id, aid, dep, arr, dTime, aTime);
+        Flight f = new Flight(id, aid, dep, arr, dTime, aTime, cost);
         
         dao.add(f);
     }

@@ -9,10 +9,10 @@ import business_layer.AirlineManager;
 import business_layer.Flight;
 import business_layer.FlightsManager;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import business_layer.CustomerManager;
+import java.util.Scanner;
 
 /**
  *
@@ -55,12 +55,24 @@ public class Test {
         a.addAirline(7, "QANTAS", "australia");
         */
         
-        LocalDate dDate = LocalDate.of(2019, Month.MARCH, 22);
+        // Test Flight Search
+        
+        Scanner in = new Scanner(System.in);
+        System.out.print("Destination:\t");
+        String departure = in.nextLine().toUpperCase();
+        System.out.print("Arrival:\t");
+        String arrival = in.nextLine().toUpperCase();
+        System.out.print("Enter departure date(YYYY-MM-DD):");
+        String dDate = in.nextLine();
+        
+        String splitDate[] = dDate.split("-");
+        
+        LocalDate depDate = LocalDate.of(Integer.parseInt(splitDate[0]), Integer.parseInt(splitDate[1]), Integer.parseInt(splitDate[2]));
                 
                 
         String[] criteria = {
-            "HEATHROW",
-            "HONGKONG",
+            departure,
+            arrival,
             dDate.toString()
         };
         ArrayList<Flight> flights = f.getFlightsOneWay(criteria);
