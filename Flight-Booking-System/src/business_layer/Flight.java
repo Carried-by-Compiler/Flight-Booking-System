@@ -20,6 +20,10 @@ public class Flight {
     private LocalDateTime depTime;
     private LocalDateTime arrTime;
     
+    public Flight() {
+        
+    }
+    
     public Flight(int id, int aid, String d, String a,
             LocalDateTime dTime, LocalDateTime aTime) {
         

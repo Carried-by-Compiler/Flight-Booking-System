@@ -21,7 +21,7 @@ public class FlightsDAO implements Dao<Flight>{
 
     @Override
     public Flight get(int id) {
-        
+        return new Flight();
     }
 
     @Override
