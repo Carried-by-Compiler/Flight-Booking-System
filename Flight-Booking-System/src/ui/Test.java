@@ -6,6 +6,7 @@
 package ui;
 
 import business_layer.AirlineManager;
+import business_layer.CustomerManager;
 
 /**
  *
@@ -17,7 +18,12 @@ public class Test {
         AirlineManager a = new AirlineManager();
         a.addAirline(3, "LUFTHANSA", "lufthansa");
         
+        
+        CustomerManager c = new CustomerManager();
+        c.addCustomer(2, "Dave");
+        
         System.out.println(a.searchAirline(2));
+        System.out.println(c.searchCustomer(1));
     }
     
     
