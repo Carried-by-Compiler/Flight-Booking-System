@@ -1,5 +1,7 @@
 package DB_Layer;
 
+import java.util.ArrayList;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,5 +17,6 @@ public interface Dao<T> {
     public void add(T n);
     public void delete(int id);
     public void update(int id);
+    public ArrayList<T> getAll();
 }
 

@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,6 +92,12 @@ public class AirlineDAO implements Dao<Airline> {
     @Override
     public void update(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override 
+    public ArrayList<Airline> getAll() {
+        
+        return null;
     }
     
     /*

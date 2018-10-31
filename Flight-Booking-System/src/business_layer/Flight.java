@@ -5,18 +5,19 @@
  */
 package business_layer;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
  *
  * @author John Rey Juele
  */
-public class Flight {
+public class Flight implements Comparable<LocalDate> {
     
     private int id;
     private int airLineID;
     private String departure;
-    private String arrivale;
+    private String arrival;
     private LocalDateTime depTime;
     private LocalDateTime arrTime;
     
@@ -30,7 +31,7 @@ public class Flight {
         this.id = id;
         this.airLineID = aid;
         this.departure = d;
-        this.arrivale = a;
+        this.arrival = a;
         this.depTime = dTime;
         this.arrTime = aTime;
     }
@@ -59,12 +60,12 @@ public class Flight {
         this.airLineID = airLineID;
     }
 
-    public String getArrivale() {
-        return arrivale;
+    public String getArrival() {
+        return arrival;
     }
 
-    public void setArrivale(String arrivale) {
-        this.arrivale = arrivale;
+    public void setArrival(String arrival) {
+        this.arrival = arrival;
     }
 
     public LocalDateTime getDepTime() {
@@ -85,8 +86,31 @@ public class Flight {
 
     @Override
     public String toString() {
-        return "Flight{" + "id=" + id + ", departure=" + departure + ", arrivale=" + arrivale + ", depTime=" + depTime + ", arrTime=" + arrTime + '}';
+        return "Flight{" + "id=" + id + ", airLineID=" + airLineID + ", departure=" + departure + ", arrival=" + arrival + ", depTime=" + depTime + ", arrTime=" + arrTime + '}';
     }
     
+    public String[] getDetailsAsArray() {
+        String[] details = new String[6];
+        
+        details[0] = String.valueOf(this.id);
+        details[1] = String.valueOf(this.airLineID);
+        details[2] = this.departure;
+        details[3] = this.arrival;
+        details[4] = this.depTime.toString();
+        details[5] = this.arrTime.toString();
+        
+        return details;
+    }
+
+    @Override
+    public int compareTo(LocalDate o) {
+        if(this.depTime.toLocalDate().isEqual(o)) {
+            return 0;
+        } else if(this.depTime.toLocalDate().isBefore(o)) {
+            return 1;
+        } else {
+            return -1;
+        }
     
+    } 
 }
