@@ -60,7 +60,8 @@ public class CustomerDAO implements Dao<Customer> {
         }
         
         if(found) {
-            return new Customer(Integer.parseInt(lineSplit[0]), lineSplit[1]);
+            return new Customer(Integer.parseInt(lineSplit[0]), lineSplit[1],
+                lineSplit[2], lineSplit[3], lineSplit[4]);
         } 
         else {
             return null;
@@ -69,18 +70,21 @@ public class CustomerDAO implements Dao<Customer> {
 
     @Override
     public void add(Customer n) {
-        int id = n.getID();
-        String name = n.getName();
+        int id = n.getId();
+        String name = n.getfName();
+        String sname = n.getlName();
+        String email = n.getEmail();
+        String password = n.getPassword();
         
         try {
             Customer existingCustomer = this.get(id);
             
             if(existingCustomer != null) {
                 // Fix error message
-                System.out.println(name + " already exists!");
+                System.out.println(name + " " + sname + " already exists!");
             } else {
                 bw = new BufferedWriter(new FileWriter(filename, true));
-                String newLine = id + "," + name + "\n";
+                String newLine = id + "," + name + "," + sname + "," + email + "," + password + "\n";
                 bw.append(newLine);
                 bw.close();
                 

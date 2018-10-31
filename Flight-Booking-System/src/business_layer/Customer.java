@@ -11,40 +11,72 @@ package business_layer;
  */
 public class Customer {
     private int id;
-    private String name;
+    private String fName;
+    private String lName;
+    private String email;
+    private String password;
     
     
     public Customer(){
         this.id = 0;
-        this.name = "";
+        this.fName = "";
+        this.lName = "";
+        this.email = "";
+        this.password = "";
     }
     
-    public Customer(int uid, String uname){
+    public Customer(int uid, String uname, String sname, String email, String password){
         this.id = uid;
-        this.name = uname;
+        this.fName = uname;
+        this.lName = sname;
+        this.email = email;
+        this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getfName() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
+    public String getlName() {
+        return lName;
+    }
+
+    public void setlName(String lName) {
+        this.lName = lName;
     }
     
-    public int getID(){
-        return this.id;
+    public void setEmail(String newEmail) {
+        this.email = newEmail;
     }
     
-    public void setID(int uid){
-       this.id = uid;
+    public String getEmail() {
+        return this.email;
     }
-   
-    
-    public String getName(){
-        return name;
+
+    public String getPassword() {
+        return password;
     }
-    
-    public void setName(String uName){
-        this.name = uName;
+
+    public void setPassword(String password) {
+        this.password = password;
     }
-    
+
+    @Override
     public String toString() {
-        String message = "ID:\t\t" + this.id + "\nCustomer Name:\t" + this.name + "\n";
-        
-        return message;
+        return "Customer{" + "id=" + id + ", fName=" + fName + ", lName=" + lName + ", email=" + email + '}';
     }
+    
 }
 

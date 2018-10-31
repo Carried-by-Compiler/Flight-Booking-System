@@ -23,10 +23,18 @@ public class Test {
     public static void main(String[] args) {
         AirlineManager a = new AirlineManager();
         FlightsManager f = new FlightsManager();
-        
         CustomerManager c = new CustomerManager();
-        c.addCustomer(2, "Dave");
         
+        //c.login()
+        
+        c.addCustomer(3, "OWEN", "CASSIDY", "e@yahoo.com", "e");
+        
+        /*
+        c.addCustomer(1, "DAVE", "DOUGH", "MA-BOY");
+        c.addCustomer(2, "JIM", "DOUGH", "ma-Boy2");
+        */
+        
+        /*
         System.out.println(a.searchAirline(2));
         System.out.println(c.searchCustomer(1));
         LocalDateTime from = LocalDateTime.of(2019, Month.FEBRUARY, 15, 15, 30);
@@ -45,6 +53,7 @@ public class Test {
         a.addAirline(5, "UNITED", "usa");
         a.addAirline(6, "EMIRATES", "emirates");
         a.addAirline(7, "QANTAS", "australia");
+        */
         
         LocalDate dDate = LocalDate.of(2019, Month.MARCH, 22);
                 

@@ -19,9 +19,9 @@ public class CustomerManager {
         this.dao = DaoFactory.getDao(DaoFactory.CUSTOMER);
     }
     
-    public void addCustomer(int id, String name) {
+    public void addCustomer(int id, String name, String lName, String e, String password) {
         // TODO: add information validation before passing to DAO
-        dao.add(new Customer(id, name));
+        dao.add(new Customer(id, name, lName, e, password));
     }
     
     public String searchCustomer(int id) {
