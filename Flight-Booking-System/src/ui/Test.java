@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import business_layer.CustomerManager;
 
 /**
  *
@@ -23,6 +24,11 @@ public class Test {
         AirlineManager a = new AirlineManager();
         FlightsManager f = new FlightsManager();
         
+        CustomerManager c = new CustomerManager();
+        c.addCustomer(2, "Dave");
+        
+        System.out.println(a.searchAirline(2));
+        System.out.println(c.searchCustomer(1));
         LocalDateTime from = LocalDateTime.of(2019, Month.FEBRUARY, 15, 15, 30);
         LocalDateTime to   = LocalDateTime.of(2019, Month.FEBRUARY, 15, 22, 50);
         f.addFlight(0, 1, "DUBLIN", "BOSTON", from, to);

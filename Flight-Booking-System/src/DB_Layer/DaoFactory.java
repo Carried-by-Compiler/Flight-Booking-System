@@ -13,6 +13,7 @@ public class DaoFactory {
     
     public static final int AIRLINE = 1;
     public static final int FLIGHT  = 2;
+    public static final int CUSTOMER = 3;
     
     public static Dao getDao(int type) {
         Dao d = null;
@@ -24,6 +25,10 @@ public class DaoFactory {
                 
             case FLIGHT:
                 d = new FlightsDAO();
+                break;
+                
+            case CUSTOMER:
+                d = new CustomerDAO();
                 break;
         }
        
