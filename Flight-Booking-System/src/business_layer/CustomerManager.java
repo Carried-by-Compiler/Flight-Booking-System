@@ -19,6 +19,10 @@ public class CustomerManager {
         this.dao = DaoFactory.getDao(DaoFactory.CUSTOMER);
     }
     
+    public void addCustomer(String name, String lName, String e, String password){
+        dao.add(new Customer(name, lName, e, password));
+    }
+    
     public void addCustomer(int id, String name, String lName, String e, String password) {
         // TODO: add information validation before passing to DAO
         dao.add(new Customer(id, name, lName, e, password));
@@ -31,5 +35,18 @@ public class CustomerManager {
             return "Customer does not exist";
         else
             return customer.toString();
+    }
+    
+    public String searchCustomer(String email, String password){
+        Customer customer = dao.get(email, password);
+        
+        if(customer == null){
+            return "Cuctomer does not exist";
+        }
+        else
+        {
+            System.out.println(customer.getEmail());
+            return customer.toString();
+        }
     }
 }
