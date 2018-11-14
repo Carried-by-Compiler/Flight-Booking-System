@@ -141,7 +141,12 @@ public class LoginPage extends javax.swing.JFrame {
             //String password = jPasswordField1.getText();
 
             CustomerManager cm = new CustomerManager();
-            System.out.println(cm.searchCustomer(email, password));
+            if(cm.searchCustomer(email, password).equals("")){
+                System.out.print("Customer does not exist");
+            }
+            else{
+                new FlightSearch().setVisible(true);
+            }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
