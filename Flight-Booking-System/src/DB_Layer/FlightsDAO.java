@@ -114,10 +114,8 @@ public class FlightsDAO implements Dao<Flight>{
             br = new BufferedReader(new FileReader(filename));
             
             while((line = br.readLine()) != null) {
-                System.out.println("Current Line: " + line);
                 lineSplit = line.split(",");
                 
-                System.out.println("Current Datw: " + lineSplit[4]);
                 LocalDateTime dTime = LocalDateTime.parse(lineSplit[4]);
                 LocalDateTime aTime = LocalDateTime.parse(lineSplit[5]);
                 f = new Flight(Integer.parseInt(lineSplit[0]), Integer.parseInt(lineSplit[1]),

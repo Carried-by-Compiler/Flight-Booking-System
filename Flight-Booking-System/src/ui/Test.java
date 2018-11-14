@@ -29,8 +29,6 @@ public class Test {
         new FlightSearch().setVisible(true);
         //c.login()
         
-        c.addCustomer(3, "OWEN", "CASSIDY", "e@yahoo.com", "e");
-        
         /*
         c.addCustomer(1, "DAVE", "DOUGH", "MA-BOY");
         c.addCustomer(2, "JIM", "DOUGH", "ma-Boy2");

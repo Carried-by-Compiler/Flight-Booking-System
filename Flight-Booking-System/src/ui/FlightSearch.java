@@ -12,7 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -147,7 +150,6 @@ public class FlightSearch extends javax.swing.JFrame {
  
     @SuppressWarnings("empty-statement")
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
-        
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -156,6 +158,39 @@ public class FlightSearch extends javax.swing.JFrame {
                 "Airline ID", "Flight ID", "Departure Time", "Arrival Time", "Cost", "Book"
             }
         ));
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        
+        String departureCity = this.departureCity.getText().toUpperCase();
+        String arrivalCity = this.arrivalCity.getText().toUpperCase();
+        String date = this.departureDate.getText();
+        
+        String dateParsed[] = date.split("-");
+        
+        LocalDate depDate = LocalDate.of(Integer.parseInt(dateParsed[0]), Integer.parseInt(dateParsed[1]), Integer.parseInt(dateParsed[2]));
+        String[] criteria = {
+            departureCity,
+            arrivalCity,
+            depDate.toString()
+        };
+        
+        FlightsManager flightManager = new FlightsManager();
+        List<Flight> flights = flightManager.getFlightsOneWay(criteria);
+        
+        Object rowData[] = new Object[6];
+        jTable1.getColumn("Book").setCellRenderer(new ButtonRenderer());
+        jTable1.getColumn("Book").setCellEditor(new ButtonEditor(new JCheckBox()));
+        
+        if(flights.size() > 0) {
+            for(Flight flight : flights) {
+                rowData[0] = flight.getAirLineID();
+                rowData[1] = flight.getId();
+                rowData[2] = flight.getDepTime().toString();
+                rowData[3] = flight.getArrTime().toString();
+                rowData[4] = flight.getCost();
+                rowData[5] = "book";
+                model.addRow(rowData);
+            }
+        }
         /*
         FlightsManager f = new FlightsManager();
         
