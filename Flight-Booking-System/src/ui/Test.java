@@ -24,12 +24,9 @@ public class Test {
         AirlineManager a = new AirlineManager();
         FlightsManager f = new FlightsManager();
         CustomerManager c = new CustomerManager();
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginPage().setVisible(true);
-            }
-        });
+       
+        //new LoginPage().setVisible(true);
+        new FlightSearch().setVisible(true);
         //c.login()
         
         c.addCustomer(3, "OWEN", "CASSIDY", "e@yahoo.com", "e");
