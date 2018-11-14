@@ -25,8 +25,8 @@ public class Test {
         FlightsManager f = new FlightsManager();
         CustomerManager c = new CustomerManager();
        
-        //new LoginPage().setVisible(true);
-        new FlightSearch().setVisible(true);
+        new LoginPage().setVisible(true);
+        //new FlightSearch().setVisible(true);
         //c.login()
         
         /*

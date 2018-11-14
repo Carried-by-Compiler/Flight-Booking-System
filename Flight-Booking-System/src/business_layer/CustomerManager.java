@@ -41,7 +41,7 @@ public class CustomerManager {
         Customer customer = dao.get(email, password);
         
         if(customer == null){
-            return "Cuctomer does not exist";
+            return "";
         }
         else
         {
@@ -49,4 +49,6 @@ public class CustomerManager {
             return customer.toString();
         }
     }
+    
+    
 }
