@@ -25,6 +25,11 @@ public class Test {
         FlightsManager f = new FlightsManager();
         CustomerManager c = new CustomerManager();
         
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LoginPage().setVisible(true);
+            }
+        });
         //c.login()
         
         c.addCustomer(3, "OWEN", "CASSIDY", "e@yahoo.com", "e");
@@ -57,7 +62,7 @@ public class Test {
         
         // Test Flight Search
         
-        Scanner in = new Scanner(System.in);
+       /* Scanner in = new Scanner(System.in);
         System.out.print("Destination:\t");
         String departure = in.nextLine().toUpperCase();
         System.out.print("Arrival:\t");
@@ -78,7 +83,8 @@ public class Test {
         ArrayList<Flight> flights = f.getFlightsOneWay(criteria);
         for(Flight flight : flights) {
             System.out.println(flight.toString());
-        }
+*/
+       // }
     }
     
     

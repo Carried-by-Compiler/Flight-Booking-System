@@ -14,6 +14,7 @@ import java.util.ArrayList;
  */
 public interface Dao<T> {
     public T    get(int id);
+    public T    get(String email, String password);
     public void add(T n);
     public void delete(int id);
     public void update(int id);

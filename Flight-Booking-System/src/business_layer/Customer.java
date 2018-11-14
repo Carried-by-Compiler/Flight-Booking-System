@@ -33,6 +33,13 @@ public class Customer {
         this.password = password;
     }
 
+    public Customer(String name, String lName, String e, String password) {
+        this.fName = name;
+        this.lName = lName;
+        this.email = e;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }

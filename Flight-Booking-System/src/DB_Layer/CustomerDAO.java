@@ -109,5 +109,41 @@ public class CustomerDAO implements Dao<Customer> {
     public ArrayList<Customer> getAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public Customer get(String email, String password) {
+      String line;
+      String[] lineSplit = new String[2];
+      boolean found = false;
+      
+        try {
+            br = new BufferedReader(new FileReader(filename));
+            
+            while(!found && (line = br.readLine()) != null) {
+                lineSplit = line.split(",");
+                if(lineSplit[3].equals(email)) {
+                    if(lineSplit[4].equals(password)){
+                        found = true;
+                    }
+                }
+            }
+            
+            br.close();
+        }
+        
+        catch (FileNotFoundException ex) {
+            Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ioException) {
+            Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, null, ioException);
+        }
+        
+        if(found) {
+            return new Customer(Integer.parseInt(lineSplit[0]), lineSplit[1],
+                lineSplit[2], lineSplit[3], lineSplit[4]);
+        } 
+        else {
+            return null;
+        }
+    }
     
 }

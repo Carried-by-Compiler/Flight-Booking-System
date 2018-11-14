@@ -133,5 +133,10 @@ public class FlightsDAO implements Dao<Flight>{
         
         return flights;
     }
+
+    @Override
+    public Flight get(String email, String password) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
