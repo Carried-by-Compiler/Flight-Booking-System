@@ -193,9 +193,6 @@ public class FlightSearch extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_searchButtonMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
     
     
 

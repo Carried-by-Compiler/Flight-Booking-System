@@ -30,6 +30,6 @@ public class AirlineManager {
         if(airline == null)
             return "Airline does not exist";
         else
-            return airline.toString();
+            return airline.getName();
     }
 }

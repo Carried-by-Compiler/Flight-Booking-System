@@ -8,7 +8,6 @@ package DB_Layer;
 /**
  *
  * @author John Rey Juele
- * @courtesy of Jack Coffey
  */
 public class DaoFactory {
     

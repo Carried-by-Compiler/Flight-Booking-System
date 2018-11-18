@@ -26,32 +26,86 @@ public class FlightController {
         
         this.flightGUI.addSubmitListener(new SubmitListener());
         this.flightManager.register(this.flightGUI);
+        
+        // Set the years in the combo box in the gui
+        LocalDate now = LocalDate.now();
+        LocalDate nextYear = now.plusYears(1);
+        LocalDate in2Years = now.plusYears(2);
+        
+        int[] years = {now.getYear(), nextYear.getYear(), in2Years.getYear()};
+        this.flightGUI.setYearComboBox(years);
     }
     
     private void getInput() {
         
         // TODO: validate input
-        String departure = this.flightGUI.getDeparture().toUpperCase();
-        String arrival = this.flightGUI.getArrival().toUpperCase();
-        String dDate = this.flightGUI.getDepartDate();
+        String departure = this.flightGUI.getDeparture().replaceAll("\\s+", "").toUpperCase();
+        String arrival = this.flightGUI.getArrival().replaceAll("\\s+", "").toUpperCase();
+        String[] dDate = this.flightGUI.getDepartDate();
         String flightMethod = this.flightGUI.getFlightMethodChoice();
         
-        String[] parsedDate = dDate.split("/");
+        System.out.println("Departure:\t" + departure);
+        System.out.println("Arrival:\t" + arrival);
+        
         try {
-            int day = Integer.parseInt(parsedDate[0]);
-            int month = Integer.parseInt(parsedDate[1]);
-            int year = Integer.parseInt(parsedDate[2]);
+            int day = Integer.parseInt(dDate[0]);
+            int month = getMonthInt(dDate[1]);
+            int year = Integer.parseInt(dDate[2]);
             
             LocalDate date = LocalDate.of(year, month, day);
-            
+                
             if(flightMethod == "MULTIPLE") {
                 this.flightManager.getFlightsMultipleStop(departure, arrival, date);
             }
         } catch (Exception e) {
-            this.flightGUI.error();
+            System.out.println(e.toString());
+            this.flightGUI.error("PARSING ERROR");
         }
         
         //this.flightManager.submitInput(departure, arrival, );
+    }
+    
+    private int getMonthInt(String month) {
+        int monthInt = 0;
+        switch(month) {
+            case "Jan.":
+                monthInt = 1;
+                break;
+            case "Feb.":
+                monthInt = 2;
+                break;
+            case "Mar.":
+                monthInt = 3;
+                break;
+            case "Apr.":
+                monthInt = 4;
+                break;
+            case "May":
+                monthInt = 5;
+                break;
+            case "Jun.":
+                monthInt = 6;
+                break;
+            case "Jul.":
+                monthInt = 7;
+                break;
+            case "Aug.":
+                monthInt = 8;
+                break;
+            case "Sep.":
+                monthInt = 9;
+                break;
+            case "Oct.":
+                monthInt = 10;
+                break;                           
+            case "Nov.":
+                monthInt = 11;
+                break;
+            case "Dec.":
+                monthInt = 12;
+                break;
+        }
+        return monthInt;
     }
     
     private class SubmitListener implements ActionListener {
@@ -62,6 +116,7 @@ public class FlightController {
             
             switch(source) {
                 case "Search Flight":
+                    flightGUI.clearTable();
                     getInput();
                     break;
             }        

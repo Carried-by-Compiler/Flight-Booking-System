@@ -15,4 +15,5 @@ public interface FlightSearchStrategy {
     public void setGraph(Graph graph);
     public boolean execute(Node start, Node end);
     public List<Path> getShortestPaths();
+    public void resetAlgorithm();
 }

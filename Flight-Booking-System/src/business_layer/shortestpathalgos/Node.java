@@ -5,21 +5,14 @@ package business_layer.shortestpathalgos;
  * @author John Rey Juele
  */
 public class Node {
-    private int id;
     private String name;
     
     /**
      * Initialize the node object
-     * @param id identifier of the node
      * @param name what the object is called
      */
-    public Node(int id, String name) {
-        this.id = id;
+    public Node(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
@@ -27,13 +20,13 @@ public class Node {
     }
 
     /**
-     * 
-     * @return a string representation of the object 
+     * String representation of the node object.
+     * @return Description of object.
      */
     @Override
     public String toString() {
-        return "Node{" + "id=" + id + ", name=" + name + '}';
-    }
+        return "Node{" + "name=" + name + '}';
+    }    
 
     /**
      * 
@@ -48,7 +41,7 @@ public class Node {
         if(!(obj instanceof Node)) return false;
         if(obj == this) return true;
         
-        return this.id == ((Node)obj).getId();
+        return this.name.equals(((Node)obj).getName());
     }
 
     /**
@@ -59,12 +52,12 @@ public class Node {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 19 * hash + this.id;
+        hash = 19 * hash + ((name == null) ? 0 : name.hashCode());
         
         return hash;
     }
     
     public Node clone() {
-        return new Node(this.id, this.name);
+        return new Node(this.name);
     }
 }

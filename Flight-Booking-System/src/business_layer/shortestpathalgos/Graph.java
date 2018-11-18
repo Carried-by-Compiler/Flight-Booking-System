@@ -1,5 +1,6 @@
 package business_layer.shortestpathalgos;
 
+import business_layer.Flight;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,22 +40,22 @@ public class Graph {
 
     /**
      * Removes the edge connect the two nodes.
-     * @param n1 node 1
-     * @param n2 node 2
+     * @param edge2Remove The edge object to remove from the graph.
      * @return returns the removed edge.
      */
     public Edge removeEdge(Edge edge2Remove) {
         double cost = 0.0;
         Edge e = null;
         
-        for(Edge edge : this.edges) {
+        for(Edge<Flight> edge : this.edges) {
             if(edge.equals(edge2Remove)) {
                 cost = edge.getCost();
                 Node origin = edge.getOrigin();
                 Node destination = edge.getDestination();
                 int id = edge.getId();
                 
-                e = new Edge(id, origin, destination, cost);
+                //e = new Edge(id, origin, destination, cost);
+                e = edge.clone();
                 this.edges.remove(edge);
                 
                 break;
@@ -128,7 +129,7 @@ public class Graph {
             nodeCopy.add(node.clone());
         }
         
-        for(Edge edge : this.edges) {
+        for(Edge<Flight> edge : this.edges) {
             edgeCopy.add(edge.clone());
         }
         

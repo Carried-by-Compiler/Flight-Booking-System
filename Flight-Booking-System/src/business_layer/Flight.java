@@ -5,6 +5,8 @@
  */
 package business_layer;
 
+import business_layer.shortestpathalgos.Edge;
+import business_layer.shortestpathalgos.Node;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,7 +14,7 @@ import java.time.LocalDateTime;
  *
  * @author John Rey Juele
  */
-public class Flight implements Comparable<LocalDate> {
+public class Flight implements Comparable<LocalDate>, Edge<Flight> {
     
     private int id;
     private int airLineID;
@@ -38,6 +40,7 @@ public class Flight implements Comparable<LocalDate> {
         this.cost = c;
     }
     
+    @Override
     public double getCost() {
         return this.cost;
     }
@@ -46,6 +49,7 @@ public class Flight implements Comparable<LocalDate> {
         this.cost = cost;
     }
 
+    @Override
     public int getId() {
         return id;
     }
@@ -54,6 +58,11 @@ public class Flight implements Comparable<LocalDate> {
         this.id = id;
     }
 
+    @Override
+    public Node getOrigin() {
+        return new Node(this.departure);
+    }
+    
     public String getDeparture() {
         return departure;
     }
@@ -68,6 +77,11 @@ public class Flight implements Comparable<LocalDate> {
 
     public void setAirLineID(int airLineID) {
         this.airLineID = airLineID;
+    }
+    
+    @Override
+    public Node getDestination() {
+        return new Node(this.arrival);
     }
 
     public String getArrival() {
@@ -125,4 +139,28 @@ public class Flight implements Comparable<LocalDate> {
         }
     
     } 
+    
+    @Override
+    public Flight clone() {
+        // No need to create new LocalDateTime objects as they are immutable
+        return new Flight(this.id, this.airLineID, this.departure, this.arrival,
+            this.depTime, this.arrTime, this.cost);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        if(!(obj instanceof Flight)) return false;
+        if(obj == this) return true;
+        
+        return this.id == ((Flight)obj).getId();
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + this.id;
+        
+        return hash;
+    }
 }

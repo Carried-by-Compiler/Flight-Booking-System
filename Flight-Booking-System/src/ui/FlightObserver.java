@@ -6,6 +6,7 @@
 package ui;
 
 import business_layer.Flight;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,5 +15,5 @@ import business_layer.Flight;
 public interface FlightObserver {
     
     // TODO: change signature so that flight objects are not used
-    public void update(Flight flight);
+    public void update(ArrayList<String> data);
 }

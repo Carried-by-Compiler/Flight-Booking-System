@@ -5,6 +5,7 @@
  */
 package business_layer;
 
+import java.util.ArrayList;
 import ui.FlightObserver;
 
 /**
@@ -14,5 +15,5 @@ import ui.FlightObserver;
 public interface FlightSubject {
     public void register(FlightObserver o);
     public void unregister(FlightObserver o);
-    public void notifyObservers(Flight flight);
+    public void notifyObservers(ArrayList<String> data);
 }

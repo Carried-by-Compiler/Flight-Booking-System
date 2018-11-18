@@ -5,6 +5,7 @@
  */
 package business_layer.shortestpathalgos;
 
+import business_layer.Flight;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,7 +110,7 @@ public class Path implements Comparable<Path> {
             i = length;
         
         for(int j = 0; j < i; j++) {
-            e.add(this.edges.get(j).clone());
+            e.add((Flight)this.edges.get(j).clone());
         }
         
         return new Path(e);
@@ -196,7 +197,7 @@ public class Path implements Comparable<Path> {
     public Path clone() {
         ArrayList<Edge> e = new ArrayList<Edge>();
         
-        for(Edge edge : this.edges) {
+        for(Edge<Flight> edge : this.edges) {
             e.add(edge.clone());
         }
         

@@ -11,6 +11,7 @@ import business_layer.shortestpathalgos.Edge;
 import business_layer.shortestpathalgos.FlightSearchStrategy;
 import business_layer.shortestpathalgos.Graph;
 import business_layer.shortestpathalgos.Node;
+import business_layer.shortestpathalgos.Path;
 import business_layer.shortestpathalgos.Yen;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,7 +33,7 @@ public class FlightsManager implements FlightSubject {
         this.dao = DaoFactory.getDao(DaoFactory.FLIGHT);
         this.observers = new ArrayList<FlightObserver>();
         
-        this.searchHelper = new SearchHelper();
+        this.searchHelper = new SearchHelper(SearchHelper.YEN);
     }
     
     public void addFlight(int id, int aid, String dep, String arr, 
@@ -45,18 +46,115 @@ public class FlightsManager implements FlightSubject {
     
     /**
      * Obtain flights that is in accordance to user's input where connecting flights
-     * can occur.
+     * can occur. It also is used to provide all its observers of the flights found.
+     * 
      * @param departure Name of origin city,
      * @param arrival Name of destination city.
      * @param date The departure date.
      */
     public void getFlightsMultipleStop(String departure, String arrival, LocalDate date) {
         List<Flight> flights = this.dao.getAll();
-        
         List<Flight> appropriateFlights = getFlightsAfterDate(flights, date);
+        ArrayList<String> data = new ArrayList<String>();
         
         Graph graph = this.searchHelper.createGraph(appropriateFlights);
-        this.searchHelper.runAlgorithm(graph);
+        List<Path> routes = this.searchHelper.runAlgorithm(graph, departure, arrival);
+        
+        removeInvalidFlights(routes);
+       
+        for(Path route : routes) {
+            data = new ArrayList<String>();
+            route.printPath();
+            String airlines = getAssociatedAirlines(route);
+            String numOfStops = getNumberOfStops(route, arrival);
+            String times = getScheduleOfEachFlight(route);
+            String cities = getCitiesInRoute(route);
+            
+            data.add(airlines);
+            data.add(numOfStops);
+            data.add(times);
+            data.add(cities);
+            data.add(String.valueOf(route.getCost()));
+            
+            this.notifyObservers(data);
+        }
+    }
+    
+    private void removeInvalidFlights(List<Path> routes) {
+        List<Flight> flights;
+        List<Path> removedPaths = new ArrayList<Path>();
+        
+        LocalDateTime startingTime, departingTime;
+        
+        for(Path path : routes) {
+            flights = this.searchHelper.convertPathToFlights(path);
+            startingTime = flights.get(0).getDepTime();
+            for(int i = 1; i < flights.size(); i++) {
+                departingTime = flights.get(i).getDepTime();
+                if(departingTime.isBefore(startingTime)) {
+                    removedPaths.add(path);
+                    break;
+                }
+            }
+        }
+        
+        if(!removedPaths.isEmpty())
+            routes.removeAll(removedPaths);
+    }
+    
+    private String getAssociatedAirlines(Path route) {
+        AirlineManager manager = new AirlineManager();
+        String returnVal = "";
+        
+        List<Flight> flights = this.searchHelper.convertPathToFlights(route);
+        
+        for(Flight flight : flights) {
+            
+            int aID = flight.getAirLineID();
+            String airline = manager.searchAirline(aID);
+            returnVal += airline + ",";
+        }
+        
+        return returnVal;
+    }
+    
+    private String getNumberOfStops(Path route, String arrival) {
+        int stopCounter = 0;
+        
+        List<Flight> flights = this.searchHelper.convertPathToFlights(route);
+        
+        stopCounter = flights.size() - 1;
+        
+        return String.valueOf(stopCounter);
+    }
+    
+    private String getScheduleOfEachFlight(Path route) {
+        List<Flight> flights = this.searchHelper.convertPathToFlights(route);
+        LocalDateTime dTime;
+        LocalDateTime aTime;    
+        
+        String returnVal = "";
+        
+        for(Flight flight : flights) {
+            dTime = flight.getDepTime();
+            aTime = flight.getArrTime();
+            
+            returnVal += dTime.toString() + "/" + aTime.toString() + ",";
+        }
+        
+        return returnVal;
+    }
+    
+    public String getCitiesInRoute(Path route) {
+        List<Flight> flights = this.searchHelper.convertPathToFlights(route);
+        String returnVal = "";
+        
+        for(Flight flight : flights) {
+            returnVal += flight.getDeparture() + ",";
+        }
+        returnVal += flights.get(flights.size() - 1).getArrival();
+        
+        return returnVal;
     }
     
     public ArrayList<Flight> getFlightsOneWay(String[] criteria) {
@@ -123,9 +221,9 @@ public class FlightsManager implements FlightSubject {
     }
 
     @Override
-    public void notifyObservers(Flight flight) {
+    public void notifyObservers(ArrayList<String> data) {
         for(FlightObserver observer : this.observers) {
-            observer.update(flight);
+            observer.update(data);
         }
     }
 }

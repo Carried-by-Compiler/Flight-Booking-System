@@ -91,6 +91,7 @@ public class Yen implements FlightSearchStrategy {
                     */
                     Path spurPath = null;
                     dijkstra = new Dijkstra();
+                    dijkstra.setGraph(clonedGraph);
                     boolean success = dijkstra.execute(spurNode, end);
                     if(success)
                         spurPath = dijkstra.getShortestPaths().get(0);
@@ -132,6 +133,7 @@ public class Yen implements FlightSearchStrategy {
                 }
             }  
         } catch(Exception e) {
+            System.out.println(e.toString());
             ok = false;
         }
         return ok;
@@ -140,5 +142,10 @@ public class Yen implements FlightSearchStrategy {
     @Override
     public List<Path> getShortestPaths() {
         return this.shortestPaths;
+    }
+    
+    @Override
+    public void resetAlgorithm() {
+        this.shortestPaths = new ArrayList<Path>();
     }
 }

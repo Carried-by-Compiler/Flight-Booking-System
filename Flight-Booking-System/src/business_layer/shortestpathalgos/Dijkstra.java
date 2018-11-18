@@ -58,6 +58,16 @@ public class Dijkstra implements FlightSearchStrategy {
         this.previousEdges = new HashMap<Node, Edge>();
     }
     
+    @Override
+    public void resetAlgorithm() {
+        // Initialize the visited set as empty
+        this.visited = new HashSet<Node>();
+        
+        // Initialize the maps
+        this.distances =  new HashMap<Node, Double>();
+        this.predecessors = new HashMap<Node, Node>();
+        this.previousEdges = new HashMap<Node, Edge>();
+    }
     /**
      * Sets the graph in place for the algorithm to work on.
      * @param graph The graph object.
@@ -281,8 +291,7 @@ public class Dijkstra implements FlightSearchStrategy {
     }
     
     /**
-     * Get the shortest path
-     * @param target the end node
+     * Get the shortest path.
      * @return the shortest path
      */
     @Override
