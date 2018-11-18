@@ -13,19 +13,25 @@ import java.time.Month;
 import java.util.ArrayList;
 import business_layer.CustomerManager;
 import java.util.Scanner;
+import ui.controllers.FlightController;
 
 /**
  *
  * @author John Rey Juele
  */
-public class Test {
+public class Main {
     
     public static void main(String[] args) {
-        AirlineManager a = new AirlineManager();
-        FlightsManager f = new FlightsManager();
-        CustomerManager c = new CustomerManager();
-       
-        new LoginPage().setVisible(true);
+        
+        FlightsManager fManager = new FlightsManager();
+        FlightGUI flightGUI = new FlightGUI();
+        
+        FlightController fController = new FlightController(fManager, flightGUI);
+        
+        flightGUI.display();
+        //new LoginPage().setVisible(true);
+        
+        
         //new FlightSearch().setVisible(true);
         //c.login()
         

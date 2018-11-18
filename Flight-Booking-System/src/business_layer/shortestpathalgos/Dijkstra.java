@@ -27,7 +27,7 @@ import java.util.Set;
  * 
  * @author John Rey Juele
  */
-public class Dijkstra {
+public class Dijkstra implements FlightSearchStrategy {
     private List<Node> nodes;
     private List<Edge> edges;
     
@@ -38,21 +38,35 @@ public class Dijkstra {
     
     private Map<Node, Double> distances;
     private Map<Node, Node> predecessors;
+    private Map<Node, Edge> previousEdges;
     
-    public Dijkstra(Graph graph, Node end) {
+    public Dijkstra() {
+        /*
         this.nodes = new ArrayList<Node>(graph.getNodes());
         this.edges = new ArrayList<Edge>(graph.getEdges());
         
         this.end = end;
-        
+        */
         // Initialize the unvisited set
-        this.unvisited = new HashSet<Node>(graph.getNodes());
+        //this.unvisited = new HashSet<Node>(graph.getNodes());
         // Initialize the visited set as empty
         this.visited = new HashSet<Node>();
         
         // Initialize the maps
         this.distances =  new HashMap<Node, Double>();
         this.predecessors = new HashMap<Node, Node>();
+        this.previousEdges = new HashMap<Node, Edge>();
+    }
+    
+    /**
+     * Sets the graph in place for the algorithm to work on.
+     * @param graph The graph object.
+     */
+    public void setGraph(Graph graph) {
+        this.nodes = new ArrayList<Node>(graph.getNodes());
+        this.edges = new ArrayList<Edge>(graph.getEdges());
+        
+        this.unvisited = new HashSet<Node>(graph.getNodes());
     }
     
     /**
@@ -61,11 +75,44 @@ public class Dijkstra {
      * to find the shortest path as well as the nodes comprising this
      * path.
      * 
-     * @param source the starting node of the algorithm 
+     * @param start the starting node of the algorithm .
+     * @param end the end node of the algorithm.
+     * @return Returns true if successful. Otherwise, false.
      */
-    public boolean execute(Node source) {
-        // add boolean if executed
+    @Override
+    public boolean execute(Node start, Node end) {
+        
+        this.end = end;
+        
         boolean success = true;
+        Node currentNode = null;
+        List<Edge> neighboringEdges = new ArrayList<Edge>();
+        
+        this.distances.put(start, 0.0);
+        
+        while(!this.unvisited.isEmpty()) {
+            currentNode = getNextCurrent();
+            neighboringEdges = getNeighbors(currentNode);
+            
+            // If the currentNode is the spurnode and it has no neigbors, stop
+            // the algorithm.
+            if((start.equals(currentNode) && neighboringEdges.isEmpty()) || currentNode == null) {
+                success = false;
+                break;
+            } else {
+                for(Edge edge : neighboringEdges) {
+                    calculateCost(edge);
+                }
+                this.visited.add(currentNode);
+                this.unvisited.remove(currentNode);
+            }
+        }
+        
+        
+        
+        
+        
+        /*
         this.distances.put(source, 0.0);
         Node currentNode = source;
         int counter = 0;
@@ -93,6 +140,7 @@ public class Dijkstra {
                 break;
             }
         }
+        */
         return success;
     }
     
@@ -155,16 +203,16 @@ public class Dijkstra {
     }
     
     /**
-     * Get the neighboring nodes of the passed in node.
+     * Get the edges leaving the parameter node. 
      * @param currentNode the node of which we want to find the neighboring nodes to.
-     * @return returns a list of nodes that is neighboring the passed in node.
+     * @return A list of edges that leaves the current node.
      */
-    private List<Node> getNeighbours(Node currentNode) {
-        List<Node> neighbours = new ArrayList<Node>();
+    private ArrayList<Edge> getNeighbors(Node currentNode) {
+        ArrayList<Edge> neighbours = new ArrayList<Edge>();
         
         for (Edge edge : this.edges) {
             if(edge.getOrigin().equals(currentNode) && !this.visited.contains(edge.getDestination()))
-                neighbours.add(edge.getDestination());
+                neighbours.add(edge);
         }
         return neighbours;
     }
@@ -175,18 +223,26 @@ public class Dijkstra {
      * @param current the current node
      * @param next the neighbor node
      */
-    private void calculateCost(Node current, Node next) {
-        if(!this.distances.containsKey(next))
-            this.distances.put(next, Double.MAX_VALUE);
+    private void calculateCost(Edge edge) {
         
-        Double costOfCurrent = this.distances.get(current);
-        Double costOfEdge = getEdgeCost(current, next);
-        Double costOfNext = this.distances.get(next);
-        Double cost2Next = costOfCurrent + costOfEdge;
+        Node from = edge.getOrigin();
+        Node to = edge.getDestination();
+        Double edgeCost = edge.getCost();
+        int edgeID = edge.getId();
+        
+        // If the cost to the next node is still unknown, initialize its cost
+        // to infinity (in this case, to the max value of a double.
+        if(!this.distances.containsKey(to))
+            this.distances.put(to, Double.MAX_VALUE);
+        
+        Double costOfCurrent = this.distances.get(from);
+        Double costOfNext = this.distances.get(to);
+        Double cost2Next = costOfCurrent + edgeCost;
         
         if(cost2Next < costOfNext) {
-            this.distances.replace(next, cost2Next);
-            updatePredecessor(current, next);
+            this.distances.replace(to, cost2Next);
+            updatePredecessor(from, to);
+            updatePreviousEdge(to, edge);
         }
     }
     
@@ -216,11 +272,21 @@ public class Dijkstra {
     }
     
     /**
+     * Keep track of what edge was used to get to that node.
+     * @param next
+     * @param edge 
+     */
+    private void updatePreviousEdge(Node next, Edge edge) {
+        this.previousEdges.put(next, edge);
+    }
+    
+    /**
      * Get the shortest path
      * @param target the end node
      * @return the shortest path
      */
-    public Path getShortestPath() {
+    @Override
+    public List<Path> getShortestPaths() {
         
         double pathCost =  this.distances.get(end);
         List<Edge> edges = new ArrayList<Edge>();
@@ -235,7 +301,7 @@ public class Dijkstra {
         
         while(previous != null) {
             previous = this.predecessors.get(current);
-            Edge link = getEdge(current, previous);
+            Edge link = this.previousEdges.get(current);
             edges.add(link);
             
             current = previous;
@@ -244,7 +310,10 @@ public class Dijkstra {
         }
         Collections.reverse(edges);
         
-        return new Path(edges, pathCost);
+        ArrayList<Path> path = new ArrayList<Path>();
+        path.add(new Path(edges, pathCost));
+        
+        return path;
     }
     
     /**

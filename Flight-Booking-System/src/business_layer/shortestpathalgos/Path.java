@@ -143,17 +143,30 @@ public class Path implements Comparable<Path> {
      * @return returns true if the paths are equal.
      */
     public boolean equals(Path p2) {
-        if(p2 == null)
-            return false;
+        boolean ok = true;
+        if(p2 == null) {
+            ok = false;
+        }
         
+        List<Edge> e1 = this.getEdges();
         List<Edge> e2 = p2.getEdges();
         
         int numEdges1 = edges.size();
         int numEdges2 = e2.size();
         
         if(numEdges1 != numEdges2)
-            return false;
+            ok = false;
         
+        for(int i = 0; i < this.edges.size() && ok; i++) {
+            Edge edge = e1.get(i);
+            Edge otherEdge = e2.get(i);
+            
+            if(!edge.equals(otherEdge)) {
+                ok = false;
+            }
+        }
+        
+        /*
         for(int i = 0; i < numEdges1; i++) {
             Edge edge1 = edges.get(i);
             Edge edge2 = e2.get(i);
@@ -164,8 +177,8 @@ public class Path implements Comparable<Path> {
                 return false;
             }
         }
-        
-        return true;
+        */
+        return ok;
     }
 
     @Override

@@ -164,8 +164,5 @@ public class AirlineDAO implements Dao<Airline> {
     public Airline get(String email, String password) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    
-
     
 }

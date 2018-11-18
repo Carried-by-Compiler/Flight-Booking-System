@@ -15,109 +15,130 @@ import java.util.PriorityQueue;
  * 
  * https://github.com/bsmock/k-shortest-shortestPaths
  */
-public class Yen {
+public class Yen implements FlightSearchStrategy {
     
     private ArrayList<Path> shortestPaths;
-    private List<Node> nodes;
-    private List<Edge> edges;
     private Graph graph;
     
-    public Yen(Graph graph) {
-        this.nodes = graph.getNodes();
-        this.edges = graph.getEdges();
-        this.graph = graph;
-        
+    public Yen() {
         this.shortestPaths = new ArrayList<Path>();
+    }
+    
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
     
     /**
      * Execute Yen's algorithm which populates the list of shortest paths.
      * 
      * @param source the starting node.
-     * @param target the end node.
-     * @param K the number of shortest paths.
+     * @param end the end node.
      */
-    public ArrayList<Path> execute(Node source, Node target, int K) {
-        boolean addPath = true;
-        boolean canProgress = false;
-        PriorityQueue<Path> B = new PriorityQueue<Path>();
-        /*
-        Use the clone as dummy graph. Renew the clone with the graph data member of this class
-        */
-        Graph graphClone = this.graph.clone();
-        // Get and add the most shortest path as the first path
-        Dijkstra dijkstra = new Dijkstra(new Graph(nodes, edges), target);
-        dijkstra.execute(source);
-        Path path = dijkstra.getShortestPath();
+    @Override
+    public boolean execute(Node source, Node end) {
+        boolean ok = true;
         
-        shortestPaths.add(path);
+        PriorityQueue<Path> possiblePaths = new PriorityQueue<Path>();
+        Graph clonedGraph = this.graph.clone();
         
-        // Get the next K - 1 shortest paths
-        for(int k = 1; k < K; k++) {
-            if(k - this.shortestPaths.size() >= 1) {
-                break;
-            }
-            Path previousPath = shortestPaths.get(k - 1);
-            
-            for(int i = 0; i < previousPath.size(); i++) {
-                Node spurNode = previousPath.getEdges().get(i).getOrigin();
-                
-                Path rootPath = previousPath.getPathTo(i);
-                
-                for(Path p : shortestPaths) {
-                    Path stub = p.getPathTo(i);
-                    
-                    // Remove next edge in previous shortest path
-                    if(rootPath.equals(stub)) {
-                        Edge edge2Remove = p.getEdges().get(i);
-                        graphClone.removeEdge(edge2Remove.getOrigin(), edge2Remove.getDestination());
-                        //canProgress = graphClone.checkIfPathOutExists()
+        // Get A[0] -> the shortest path of the entire graph
+        Dijkstra dijkstra = new Dijkstra();
+        dijkstra.setGraph(clonedGraph);
+        dijkstra.execute(source, end);
+        Path shortestPath = dijkstra.getShortestPaths().get(0);
+        
+        this.shortestPaths.add(shortestPath);
+        int K = 20;
+        
+        try {
+            for(int k = 1; k < K; k++) {
+                Path previousShortestPath = this.shortestPaths.get(k - 1);
+
+                // Going through each spur node, from the first node to the second
+                // to last node in the previous shortest path.
+                for(int i = 0; i < previousShortestPath.size(); i++)  {
+                    Node spurNode = previousShortestPath.getEdges().get(i).getOrigin();
+
+                    Path rootPath = previousShortestPath.getPathTo(i);
+
+                    for(Path p :  this.shortestPaths) {
+                        if(p.getPathTo(i).equals(rootPath)) {
+                            // Remove the edge to make way of a diversion
+                            Edge edge2Remove = p.getEdges().get(i);
+                            clonedGraph.removeEdge(edge2Remove);
+                        }
                     }
-                }
-                
-                // Remove all nodes in root path except the spurNode from graph clone
-                for(Edge rootEdge : rootPath.getEdges()) {
-                    Node node2Remove = rootEdge.getOrigin();
-                    if(!node2Remove.equals(spurNode)) {
-                        graphClone.removeNode(node2Remove);
+
+                    // Remove the nodes that consists of the root path
+                    for(Edge rootEdge : rootPath.getEdges()) {
+                        Node node2Remove = rootEdge.getOrigin();
+                        if(!node2Remove.equals(spurNode)) {
+                            clonedGraph.removeNode(node2Remove);
+                        }
                     }
+
+                    // Calculate the shortest path from the spur node to the target node
+
+                    /*
+                    Possible problems:
+                        - What if the second to last node no longer has anymore neighbors
+                          when its only edge to the target node is removed? 
+                          How will Dijkstra  handle that?
+                        - What will we add to the priority queue if the only possible
+                          path is the path through the second to last node who's only
+                          way to the target node has been removed. If we increment
+                          K, there will not be a K-1 in the shortestPaths list.
+                    */
+                    Path spurPath = null;
+                    dijkstra = new Dijkstra();
+                    boolean success = dijkstra.execute(spurNode, end);
+                    if(success)
+                        spurPath = dijkstra.getShortestPaths().get(0);
+
+                    if(spurPath != null) {
+                        Path totalPath = rootPath.clone();
+                        totalPath.joinPath(spurPath);
+                        possiblePaths.add(totalPath);
+                    }
+
+                    // Refresh the cloned graph
+                    clonedGraph = this.graph.clone();
                 }
-                // Get shortest path from spur node to target node in reduced graph
-                Path spurPath = null;
-                dijkstra = new Dijkstra(graphClone, target);
-                boolean success = dijkstra.execute(spurNode);
-                if(success)
-                    spurPath = dijkstra.getShortestPath();
-                
-                if(spurPath != null) {
-                    Path totalPath = rootPath.clone();
-                    totalPath.joinPath(spurPath);
-                    B.add(totalPath);
-                }
-                // Refresh the graph clone to original state
-                graphClone = this.graph.clone();
-            }
-            
-            // Get shortest path from B
-            path = B.poll();
-            
-            if(path != null) {
-                // Check if this path already exists in the list of shortest paths
-                
-                for(Path p : shortestPaths) {
+
+                boolean addPath = true;
+                // get the shortest path from priority queue
+                do {
                     addPath = true;
-                    if(p.equals(path)) {
-                        addPath = false;
+                    shortestPath = possiblePaths.poll();
+
+                    if(shortestPath != null) {
+                        // check if possible shortest path already exists preivously.
+                        for(Path p : this.shortestPaths) {
+                            if(p.equals(shortestPath)) {
+                                addPath = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        break;
                     }
+                } while(!addPath);
+
+                // if there are no more possible paths to add, stop the algorithm
+                if(shortestPath == null) {
+                    break;
+                } else {
+                    this.shortestPaths.add(shortestPath);
                 }
-                
-                if(addPath) {
-                    shortestPaths.add(path);
-                    k--;
-                }
-            }
-            
+            }  
+        } catch(Exception e) {
+            ok = false;
         }
+        return ok;
+    }
+    
+    @Override
+    public List<Path> getShortestPaths() {
         return this.shortestPaths;
     }
 }

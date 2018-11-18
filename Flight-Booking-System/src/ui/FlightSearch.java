@@ -191,40 +191,6 @@ public class FlightSearch extends javax.swing.JFrame {
                 model.addRow(rowData);
             }
         }
-        /*
-        FlightsManager f = new FlightsManager();
-        
-        String dDate = departureDate.getText();
-        String dCity = departureCity.getText().toUpperCase();
-        String aCity = arrivalCity.getText().toUpperCase();
-        
-        String[] criteria = {dCity, aCity, dDate};
-        
-        ArrayList<Flight> flights = f.getFlights(criteria);
-            
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        Object rowData[] = new Object[6];
-        
-        jTable1.getColumn("Book").setCellRenderer(new ButtonRenderer());
-        jTable1.getColumn("Book").setCellEditor(new ButtonEditor(new JCheckBox()));
-        if(flights.size() > 0){
-            for(Flight flight : flights) {
-           
-                String details[] = flight.toString().split(",");
-
-                rowData[0] = details[0].substring(details[0].indexOf("=")+1);
-                rowData[1] = details[1].substring(details[1].indexOf("=")+1);
-                rowData[2] = details[4].substring(details[4].indexOf("=")+1);
-                rowData[3] = details[5].substring(details[5].indexOf("=")+1);
-                rowData[4] = details[6].substring(details[6].indexOf("=")+1, details[6].length()-1);
-                rowData[5] = "book";
-                model.addRow(rowData);
-            }
-        }
-        else{
-            JOptionPane.showMessageDialog(null, "OH NOOO!");
-        }
-        */
     }//GEN-LAST:event_searchButtonMouseClicked
 
     /**

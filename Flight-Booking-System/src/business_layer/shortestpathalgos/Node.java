@@ -64,13 +64,7 @@ public class Node {
         return hash;
     }
     
-    /**
-     * Produces a clone of the node object.
-     * @return A Node copy
-     */
     public Node clone() {
-        Node node = null;
-        
         return new Node(this.id, this.name);
     }
 }
