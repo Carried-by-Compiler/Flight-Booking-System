@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import business_layer.CustomerManager;
 import java.util.Scanner;
 import ui.controllers.FlightController;
+import ui.controllers.AirlineController;
+import ui.controllers.CustomerController;
 
 /**
  *
@@ -25,8 +27,13 @@ public class Main {
         
         FlightsManager fManager = new FlightsManager();
         FlightGUI flightGUI = new FlightGUI();
+        AirlineManager aManager = new AirlineManager();
+        CustomerManager cManager = new CustomerManager();
+        
         
         FlightController fController = new FlightController(fManager, flightGUI);
+        CustomerController cController = new CustomerController();
+        AirlineController aController = new AirlineController();
         
         flightGUI.display();
         //new LoginPage().setVisible(true);
