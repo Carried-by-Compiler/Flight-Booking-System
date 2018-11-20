@@ -88,6 +88,7 @@ public class Dijkstra implements FlightSearchStrategy {
      * @param start the starting node of the algorithm .
      * @param end the end node of the algorithm.
      * @return Returns true if successful. Otherwise, false.
+     * @throws java.lang.Exception
      */
     @Override
     public boolean execute(Node start, Node end) {
@@ -95,28 +96,36 @@ public class Dijkstra implements FlightSearchStrategy {
         this.end = end;
         
         boolean success = true;
-        Node currentNode = null;
-        List<Edge> neighboringEdges = new ArrayList<Edge>();
         
-        this.distances.put(start, 0.0);
-        
-        while(!this.unvisited.isEmpty()) {
-            currentNode = getNextCurrent();
-            neighboringEdges = getNeighbors(currentNode);
-            
-            // If the currentNode is the spurnode and it has no neigbors, stop
-            // the algorithm.
-            if((start.equals(currentNode) && neighboringEdges.isEmpty()) || currentNode == null) {
-                success = false;
-                break;
-            } else {
-                for(Edge edge : neighboringEdges) {
-                    calculateCost(edge);
+        try {
+            this.distances.put(start, 0.0);
+            Node currentNode = null;
+            List<Edge> neighboringEdges = new ArrayList<Edge>();
+
+            this.distances.put(start, 0.0);
+
+            while(!this.unvisited.isEmpty()) {
+                currentNode = getNextCurrent();
+                neighboringEdges = getNeighbors(currentNode);
+
+                // If the currentNode is the spurnode and it has no neigbors, stop
+                // the algorithm.
+                if((start.equals(currentNode) && neighboringEdges.isEmpty()) || currentNode == null) {
+                    success = true;
+                    break;
+                } else {
+                    for(Edge edge : neighboringEdges) {
+                        calculateCost(edge);
+                    }
+                    this.visited.add(currentNode);
+                    this.unvisited.remove(currentNode);
                 }
-                this.visited.add(currentNode);
-                this.unvisited.remove(currentNode);
             }
+        } catch (Exception e) {
+            success = false;
+            e.printStackTrace();
         }
+       
         
         
         
@@ -297,7 +306,7 @@ public class Dijkstra implements FlightSearchStrategy {
     @Override
     public List<Path> getShortestPaths() {
         
-        double pathCost =  this.distances.get(end);
+        
         List<Edge> edges = new ArrayList<Edge>();
         
         Node current = end;
@@ -317,6 +326,7 @@ public class Dijkstra implements FlightSearchStrategy {
             previous = this.predecessors.get(current);
             
         }
+        double pathCost =  this.distances.get(end);
         Collections.reverse(edges);
         
         ArrayList<Path> path = new ArrayList<Path>();

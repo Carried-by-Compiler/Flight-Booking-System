@@ -87,18 +87,25 @@ public class SearchHelper {
         return graph;
     }
     
-    public List<Path> runAlgorithm(Graph graph, String dep, String arr) {
-        List<Path> paths = new ArrayList<Path>();
+    public boolean runAlgorithm(Graph graph, String dep, String arr) {
+        
         
         this.flightSearcher.resetAlgorithm();
         this.flightSearcher.setGraph(graph);
         boolean success = this.flightSearcher.execute(new Node(dep), new Node(arr));
         if(success) {
-            paths = this.flightSearcher.getShortestPaths();
+            System.out.println("flights found");
         } else {
             // TODO make better error handling mechanism
-            System.out.println("Error while searching flights");
+            System.out.println("No flights found");
         }
+        
+        return success;
+    }
+    
+    public List<Path> getResults() {
+        List<Path> paths = new ArrayList<Path>();
+        paths = this.flightSearcher.getShortestPaths();
         
         return paths;
     }

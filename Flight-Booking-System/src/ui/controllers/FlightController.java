@@ -6,6 +6,7 @@
 package ui.controllers;
 
 import business_layer.FlightsManager;
+import business_layer.NoFlightsFoundException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -54,6 +55,10 @@ public class FlightController {
             this.flightGUI.error("DEPARTURE");
             correct = false;
         }
+        if(arrival.isEmpty()) {
+            this.flightGUI.error("ARRIVAL");
+            correct = false;
+        }
         
         try {            
             depDate = convertStringToDate(dDate, 0);
@@ -65,10 +70,14 @@ public class FlightController {
         
         if(correct) {
             if(flightMethod.equals("MULTIPLE")) {
-                if(oneWayOrReturn.equals("ONEWAY")) {
-                    this.flightManager.getFlightsMultipleStop(departure, arrival, depDate);
-                } else if(oneWayOrReturn.equals("RETURN")) {
-                    this.flightManager.getFlightsMultipleStop(departure, arrival, depDate, retDate);
+                try {
+                    if(oneWayOrReturn.equals("ONEWAY")) {
+                        this.flightManager.getFlightsMultipleStop(departure, arrival, depDate);
+                    } else if(oneWayOrReturn.equals("RETURN")) {
+                        this.flightManager.getFlightsMultipleStop(departure, arrival, depDate, retDate);
+                    }
+                } catch(NoFlightsFoundException e) {
+                    this.flightGUI.error(e.getErrorID());
                 }
             }
         }

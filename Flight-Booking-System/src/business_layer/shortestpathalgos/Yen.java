@@ -40,17 +40,21 @@ public class Yen implements FlightSearchStrategy {
         
         PriorityQueue<Path> possiblePaths = new PriorityQueue<Path>();
         Graph clonedGraph = this.graph.clone();
-        
-        // Get A[0] -> the shortest path of the entire graph
-        Dijkstra dijkstra = new Dijkstra();
-        dijkstra.setGraph(clonedGraph);
-        dijkstra.execute(source, end);
-        Path shortestPath = dijkstra.getShortestPaths().get(0);
-        
-        this.shortestPaths.add(shortestPath);
-        int K = 20;
+        Path shortestPath;
         
         try {
+            // Get A[0] -> the shortest path of the entire graph
+            Dijkstra dijkstra = new Dijkstra();
+            dijkstra.setGraph(clonedGraph);
+            boolean success = dijkstra.execute(source, end);
+            if(success)
+                shortestPath = dijkstra.getShortestPaths().get(0);
+            else 
+                throw new Exception();
+
+            this.shortestPaths.add(shortestPath);
+            int K = 20;
+            
             for(int k = 1; k < K; k++) {
                 Path previousShortestPath = this.shortestPaths.get(k - 1);
 
@@ -92,9 +96,14 @@ public class Yen implements FlightSearchStrategy {
                     Path spurPath = null;
                     dijkstra = new Dijkstra();
                     dijkstra.setGraph(clonedGraph);
-                    boolean success = dijkstra.execute(spurNode, end);
-                    if(success)
+                    success = dijkstra.execute(spurNode, end);
+                    if(success) {
+                        try {
                         spurPath = dijkstra.getShortestPaths().get(0);
+                        } catch(NullPointerException e) {
+                            spurPath = null;
+                        }
+                    }
 
                     if(spurPath != null) {
                         Path totalPath = rootPath.clone();

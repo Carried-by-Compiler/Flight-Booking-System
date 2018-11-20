@@ -57,13 +57,19 @@ public class FlightsManager implements FlightSubject {
      * @param arrival Name of destination city.
      * @param date The departure date.
      */
-    public void getFlightsMultipleStop(String departure, String arrival, LocalDate date) {
+    public void getFlightsMultipleStop(String departure, String arrival, LocalDate date) throws NoFlightsFoundException {
         // TODO, limit flight search to 1 or 2 days after departure date.
         List<Flight> appropriateFlights = getFlightsAfterDate(date);
+        List<Path> routes = new ArrayList<Path>();
         ArrayList<String> data = new ArrayList<String>();
         
         Graph graph = this.searchHelper.createGraph(appropriateFlights);
-        List<Path> routes = this.searchHelper.runAlgorithm(graph, departure, arrival);
+        boolean success = this.searchHelper.runAlgorithm(graph, departure, arrival);
+        if(success) {
+            routes = this.searchHelper.getResults();
+        } else {
+            throw new NoFlightsFoundException("No flights to " + departure + " was found.");
+        }
         
         removeInvalidFlights(routes);
        
@@ -94,20 +100,36 @@ public class FlightsManager implements FlightSubject {
      * @param arrival Name of destination city.
      * @param dDate The departure date.
      * @param rDate The return date.
+     * 
+     * @throws NoFlightsFoundException Thrown when no flights were found. 
      */
-    public void getFlightsMultipleStop(String departure, String arrival, LocalDate dDate, LocalDate rDate) {
+    public void getFlightsMultipleStop(String departure, String arrival, 
+            LocalDate dDate, LocalDate rDate) throws NoFlightsFoundException {
         // TODO, limit flight search to 1 or 2 days after departure date.
         List<Flight> flightsDepart = getFlightsBetweenDates(dDate, rDate);
         List<Flight> flightsReturn = getFlightsAfterDate(rDate);
+        List<Path> departingRoutes = new ArrayList<Path>();
+        List<Path> returningRoutes = new ArrayList<Path>();
         ArrayList<String> data = new ArrayList<String>();
         
         String airlines, numOfStops, times, cities;
+        boolean success;
         
         Graph graph = this.searchHelper.createGraph(flightsDepart);
-        List<Path> departingRoutes = this.searchHelper.runAlgorithm(graph, departure, arrival);
+        success = this.searchHelper.runAlgorithm(graph, departure, arrival);
+        if(success) {
+            departingRoutes = this.searchHelper.getResults();
+        } else {
+            throw new NoFlightsFoundException("Flights to " + arrival + " not found.");
+        }
         
         graph = this.searchHelper.createGraph(flightsReturn);
-        List<Path> returningRoutes = this.searchHelper.runAlgorithm(graph, arrival, departure);
+        success = this.searchHelper.runAlgorithm(graph, arrival, departure);
+        if(success) {
+            returningRoutes = this.searchHelper.getResults();
+        } else {
+            throw new NoFlightsFoundException("Flights to " + departure + " not found.");
+        }
         
         removeInvalidFlights(departingRoutes);
         removeInvalidFlights(returningRoutes);

@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -343,7 +344,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addGap(15, 15, 15)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19)
                 .addComponent(jLabel3)
@@ -357,7 +358,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addComponent(jButton1)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
@@ -459,6 +460,13 @@ public class FlightGUI extends JFrame implements FlightObserver {
                 this.returnDateLabel.setText("Please enter a valid date");
                 this.returnDateLabel.setForeground(Color.red);
                 break;
+            case "ARRIVAL":
+                this.arrivalTextField.setText("Please enter a destination");
+                this.arrivalTextField.setForeground(Color.red);
+                break;
+            case "NOFLIGHTS":
+                JOptionPane.showMessageDialog(this, "No Flights Found!", "No Flights", JOptionPane.INFORMATION_MESSAGE);
+                break;
         }
     }
     
@@ -536,7 +544,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
     private String parseAirlines(String[] airlines) {
         String output = "";
         for(int i = 0; i < airlines.length;  i++) {
-            output += airlines[i] + " | ";
+            output += airlines[i] + ", ";
         }
         
         return output;
