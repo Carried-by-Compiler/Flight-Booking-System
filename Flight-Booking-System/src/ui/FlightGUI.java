@@ -6,6 +6,8 @@
 package ui;
 
 import business_layer.Flight;
+import business_layer.FlightsManager;
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,8 +21,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class FlightGUI extends JFrame implements FlightObserver {
     
-    private List<ArrayList<String>> pathDetails;
-
+    private List<ArrayList<String>> departPathDetails;
+    private List<ArrayList<String>> returnPathDetails;
+    
     /**
      * Creates new form FlightsSearch
      */
@@ -48,7 +51,9 @@ public class FlightGUI extends JFrame implements FlightObserver {
         }
         //</editor-fold>
         //</editor-fold>
-        this.pathDetails = new ArrayList<ArrayList<String>>();
+        this.departPathDetails = new ArrayList<ArrayList<String>>();
+        this.returnPathDetails = new ArrayList<ArrayList<String>>();
+        
         initComponents();
     }
 
@@ -62,14 +67,15 @@ public class FlightGUI extends JFrame implements FlightObserver {
     private void initComponents() {
 
         buttonGroup10 = new javax.swing.ButtonGroup();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
-        flightDetailsTable = new javax.swing.JTable();
+        departFlightTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         departTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         arrivalTextField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        departDateLabel = new javax.swing.JLabel();
         directRB = new javax.swing.JRadioButton();
         noStopRB = new javax.swing.JRadioButton();
         submitButton = new javax.swing.JButton();
@@ -78,12 +84,26 @@ public class FlightGUI extends JFrame implements FlightObserver {
         monthCB = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         yearCB = new javax.swing.JComboBox<>();
+        oneWayRB = new javax.swing.JRadioButton();
+        returnRB = new javax.swing.JRadioButton();
+        returnDateLabel = new javax.swing.JLabel();
+        rDateCB = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        rMonthCB = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        rYearCB = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Search Flights");
         setResizable(false);
 
-        flightDetailsTable.setModel(new javax.swing.table.DefaultTableModel(
+        departFlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -106,7 +126,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(flightDetailsTable);
+        jScrollPane1.setViewportView(departFlightTable);
 
         jLabel1.setText("From:");
 
@@ -117,7 +137,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
 
         arrivalTextField.setColumns(20);
 
-        jLabel3.setText("Depart Date:");
+        departDateLabel.setText("Depart Date:");
 
         buttonGroup10.add(directRB);
         directRB.setText("Direct Flights");
@@ -131,7 +151,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
             }
         });
 
-        submitButton.setText("Search Flight");
+        submitButton.setText("Search Flights");
         submitButton.setToolTipText("Submit form");
 
         dateCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DD", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
@@ -149,16 +169,33 @@ public class FlightGUI extends JFrame implements FlightObserver {
 
         yearCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "YYYY" }));
 
+        buttonGroup1.add(oneWayRB);
+        oneWayRB.setText("One way");
+
+        buttonGroup1.add(returnRB);
+        returnRB.setSelected(true);
+        returnRB.setText("Return");
+
+        returnDateLabel.setText("Return Date:");
+
+        rDateCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DD", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
+
+        jLabel7.setText("/");
+
+        rMonthCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MMM", "Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec." }));
+
+        jLabel8.setText("/");
+
+        rYearCB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "YYYY" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap())
+                    .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(arrivalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -166,25 +203,42 @@ public class FlightGUI extends JFrame implements FlightObserver {
                             .addComponent(departTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(40, 40, 40)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(dateCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(monthCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(yearCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(noStopRB)
-                                    .addComponent(directRB)
+                            .addComponent(departDateLabel)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(rDateCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(rMonthCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel8)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(rYearCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(submitButton))
-                                .addGap(45, 45, 45))))))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(dateCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel4)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(monthCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel5)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(yearCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(returnDateLabel))
+                                    .addGap(40, 40, 40)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(directRB)
+                                        .addComponent(noStopRB))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(returnRB)
+                                        .addComponent(oneWayRB)))))))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,7 +246,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel3))
+                    .addComponent(departDateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -204,58 +258,132 @@ public class FlightGUI extends JFrame implements FlightObserver {
                             .addComponent(jLabel5)
                             .addComponent(yearCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(returnDateLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(arrivalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(arrivalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(rDateCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel7)
+                                .addComponent(rMonthCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel8)
+                                .addComponent(rYearCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(directRB)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(directRB)
+                            .addComponent(oneWayRB))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(noStopRB)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(noStopRB)
+                            .addComponent(returnRB))
                         .addGap(18, 18, 18)
                         .addComponent(submitButton)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabel3.setText("Departing Flights");
+
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabel6.setText("Returning Flights");
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Airline(s)", "Depart Time", "Arrival Time", "# of Stops", "Cost"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable1);
+
+        jButton1.setText("Submit Selection");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
+                .addContainerGap(50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addContainerGap(47, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jLabel6)
+                    .addComponent(jSeparator2)
+                    .addComponent(jScrollPane2))
+                .addContainerGap(50, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(383, 383, 383)
+                .addComponent(jButton1)
+                .addContainerGap(384, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addGap(19, 19, 19)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(jButton1)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void noStopRBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noStopRBActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_noStopRBActionPerformed
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void dateCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateCBActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_dateCBActionPerformed
 
+    private void noStopRBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noStopRBActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_noStopRBActionPerformed
+
     
     public void display() {
-        
         this.setVisible(true);
     }
     
-    public void addSubmitListener(ActionListener submitlistener) {
-        submitButton.addActionListener(submitlistener);
+    public void addButtonListener(ActionListener buttonPressListener) {
+        submitButton.addActionListener(buttonPressListener);
+        oneWayRB.addActionListener(buttonPressListener);
+        returnRB.addActionListener(buttonPressListener);
     }
     
     public String getDeparture() {
@@ -276,6 +404,22 @@ public class FlightGUI extends JFrame implements FlightObserver {
         return date;
     }
     
+    public String[] getReturnDate() {
+        String date[] = new String[3];
+        
+        if(this.rDateCB.isEnabled() && this.rMonthCB.isEnabled() && this.rYearCB.isEnabled()) {
+            String day = String.valueOf(this.rDateCB.getSelectedItem());
+            String month = String.valueOf(this.rMonthCB.getSelectedItem());
+            String year = String.valueOf(this.rYearCB.getSelectedItem());
+        
+            date[0] = day; date[1] = month; date[2] = year;
+        } else {
+            date[0] = ""; date[1] = ""; date[2] = "";
+        }
+        
+        return date;
+    }
+    
     public String getFlightMethodChoice() {
         String selected = "";
         
@@ -288,14 +432,47 @@ public class FlightGUI extends JFrame implements FlightObserver {
         return selected;
     }
     
+    public String getFlightGetReturnMethod() {
+        String selected = "";
+        
+        if(oneWayRB.isSelected()) {
+            selected = "ONEWAY";
+        } else if(returnRB.isSelected()) {
+            selected = "RETURN";
+        }
+        
+        return selected;
+    }
+    
     public void error(String errorMessage) {
-        this.departTextField.setText(errorMessage);
+        
+        switch(errorMessage) {
+            case "DATE":
+                this.departDateLabel.setText("Please enter a valid date");
+                this.departDateLabel.setForeground(Color.red);
+                break;
+            case "DEPARTURE":
+                this.departTextField.setForeground(Color.red);
+                this.departTextField.setText("Please enter departure");
+                break;
+            case "RDATE":
+                this.returnDateLabel.setText("Please enter a valid date");
+                this.returnDateLabel.setForeground(Color.red);
+                break;
+        }
     }
     
     public void setYearComboBox(int[] years) {
         for(int i = 0; i < years.length; i++) {
             this.yearCB.addItem(String.valueOf(years[i]));
+            this.rYearCB.addItem(String.valueOf(years[i]));
         }
+    }
+    
+    public void setRBEnable(boolean set) {
+        this.rDateCB.setEnabled(set);
+        this.rMonthCB.setEnabled(set);
+        this.rYearCB.setEnabled(set);
     }
     
     /**
@@ -310,20 +487,18 @@ public class FlightGUI extends JFrame implements FlightObserver {
      * @param data A list containing the data to display
      */
     @Override
-    public void update(ArrayList<String> data) {
-        DefaultTableModel tbModel = (DefaultTableModel) this.flightDetailsTable.getModel();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMMM-yyyy | HH:mm");
+    public void update(ArrayList<String> data, int type) {
+        DefaultTableModel tbDepartModel = (DefaultTableModel) this.departFlightTable.getModel();
+        DefaultTableModel tbReturnModel = (DefaultTableModel) this.jTable1.getModel();
         Object[] dataRow = new Object[5];
         
         String airlines = "";
         String depDate, arrDate;
         
-        this.pathDetails.add(data);
-        
         // TODO: find a more appropriate place to handle parsing logic. I'm tired now :'(
         String[] parsedInfo = data.get(0).split(",");
         airlines += parseAirlines(parsedInfo);
-        
+
         parsedInfo = data.get(2).split(",");
         depDate = getStartingTime(parsedInfo);
         arrDate = getEndingTime(parsedInfo);
@@ -334,17 +509,26 @@ public class FlightGUI extends JFrame implements FlightObserver {
         dataRow[3] = data.get(1);//1;
         dataRow[4] = "€" + data.get(4); //flight.getCost();
         
-        tbModel.addRow(dataRow);
+        
+        
+        if(type == FlightsManager.DEPART) {
+            this.departPathDetails.add(data);
+            tbDepartModel.addRow(dataRow);
+        } else if(type == FlightsManager.RETURN) {
+            this.returnPathDetails.add(data);
+            tbReturnModel.addRow(dataRow);
+        }
     }
     
     /**
      * Clear all info from the flights table.
      */
     public void clearTable() {
-        System.out.println(pathDetails.size());
-        this.pathDetails.clear();
-        System.out.println(pathDetails.size());
-        DefaultTableModel model = (DefaultTableModel) this.flightDetailsTable.getModel();
+        this.departPathDetails.clear();
+        this.returnPathDetails.clear();
+        DefaultTableModel model = (DefaultTableModel) this.departFlightTable.getModel();
+        model.setRowCount(0);
+        model = (DefaultTableModel) this.jTable1.getModel();
         model.setRowCount(0);
         this.revalidate();
     }
@@ -374,20 +558,35 @@ public class FlightGUI extends JFrame implements FlightObserver {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField arrivalTextField;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup10;
     private javax.swing.JComboBox<String> dateCB;
+    private javax.swing.JLabel departDateLabel;
+    private javax.swing.JTable departFlightTable;
     private javax.swing.JTextField departTextField;
     private javax.swing.JRadioButton directRB;
-    private javax.swing.JTable flightDetailsTable;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JComboBox<String> monthCB;
     private javax.swing.JRadioButton noStopRB;
+    private javax.swing.JRadioButton oneWayRB;
+    private javax.swing.JComboBox<String> rDateCB;
+    private javax.swing.JComboBox<String> rMonthCB;
+    private javax.swing.JComboBox<String> rYearCB;
+    private javax.swing.JLabel returnDateLabel;
+    private javax.swing.JRadioButton returnRB;
     private javax.swing.JButton submitButton;
     private javax.swing.JComboBox<String> yearCB;
     // End of variables declaration//GEN-END:variables

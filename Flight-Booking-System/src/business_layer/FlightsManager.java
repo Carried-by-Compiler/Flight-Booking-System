@@ -24,8 +24,12 @@ import ui.FlightObserver;
  * @author John Rey Juele
  */
 public class FlightsManager implements FlightSubject {
+    public static final int DEPART = 0;
+    public static final int RETURN = 1;
+    
     private Dao<Flight> dao;
     private List<FlightObserver> observers;
+    private List<Flight> allFlights;
     
     private SearchHelper searchHelper;
     
@@ -34,6 +38,7 @@ public class FlightsManager implements FlightSubject {
         this.observers = new ArrayList<FlightObserver>();
         
         this.searchHelper = new SearchHelper(SearchHelper.YEN);
+        this.allFlights = this.dao.getAll();
     }
     
     public void addFlight(int id, int aid, String dep, String arr, 
@@ -53,8 +58,8 @@ public class FlightsManager implements FlightSubject {
      * @param date The departure date.
      */
     public void getFlightsMultipleStop(String departure, String arrival, LocalDate date) {
-        List<Flight> flights = this.dao.getAll();
-        List<Flight> appropriateFlights = getFlightsAfterDate(flights, date);
+        // TODO, limit flight search to 1 or 2 days after departure date.
+        List<Flight> appropriateFlights = getFlightsAfterDate(date);
         ArrayList<String> data = new ArrayList<String>();
         
         Graph graph = this.searchHelper.createGraph(appropriateFlights);
@@ -66,7 +71,7 @@ public class FlightsManager implements FlightSubject {
             data = new ArrayList<String>();
             route.printPath();
             String airlines = getAssociatedAirlines(route);
-            String numOfStops = getNumberOfStops(route, arrival);
+            String numOfStops = getNumberOfStops(route);
             String times = getScheduleOfEachFlight(route);
             String cities = getCitiesInRoute(route);
             
@@ -76,8 +81,70 @@ public class FlightsManager implements FlightSubject {
             data.add(cities);
             data.add(String.valueOf(route.getCost()));
             
-            this.notifyObservers(data);
+            this.notifyObservers(data, DEPART);
         }
+    }
+    
+    /**
+     * This is an overloaded method that searches for both departing and returning
+     * flights that are in accordance to user's input where connecting flights can
+     * occur. It also is used to provide all its observers of the flights found.
+     * 
+     * @param departure Name of origin city.
+     * @param arrival Name of destination city.
+     * @param dDate The departure date.
+     * @param rDate The return date.
+     */
+    public void getFlightsMultipleStop(String departure, String arrival, LocalDate dDate, LocalDate rDate) {
+        // TODO, limit flight search to 1 or 2 days after departure date.
+        List<Flight> flightsDepart = getFlightsBetweenDates(dDate, rDate);
+        List<Flight> flightsReturn = getFlightsAfterDate(rDate);
+        ArrayList<String> data = new ArrayList<String>();
+        
+        String airlines, numOfStops, times, cities;
+        
+        Graph graph = this.searchHelper.createGraph(flightsDepart);
+        List<Path> departingRoutes = this.searchHelper.runAlgorithm(graph, departure, arrival);
+        
+        graph = this.searchHelper.createGraph(flightsReturn);
+        List<Path> returningRoutes = this.searchHelper.runAlgorithm(graph, arrival, departure);
+        
+        removeInvalidFlights(departingRoutes);
+        removeInvalidFlights(returningRoutes);
+        
+        for(Path route : departingRoutes) {
+            data = new ArrayList<String>();
+            
+            airlines = getAssociatedAirlines(route);
+            numOfStops = getNumberOfStops(route);
+            times = getScheduleOfEachFlight(route);
+            cities = getCitiesInRoute(route);
+            
+            data.add(airlines);
+            data.add(numOfStops);
+            data.add(times);
+            data.add(cities);
+            data.add(String.valueOf(route.getCost()));
+            
+            this.notifyObservers(data, DEPART);
+        } 
+        
+        for(Path route : returningRoutes) {
+            data = new ArrayList<String>();
+            
+            airlines = getAssociatedAirlines(route);
+            numOfStops = getNumberOfStops(route);
+            times = getScheduleOfEachFlight(route);
+            cities = getCitiesInRoute(route);
+            
+            data.add(airlines);
+            data.add(numOfStops);
+            data.add(times);
+            data.add(cities);
+            data.add(String.valueOf(route.getCost()));
+            
+            this.notifyObservers(data, RETURN);
+        } 
     }
     
     private void removeInvalidFlights(List<Path> routes) {
@@ -118,7 +185,7 @@ public class FlightsManager implements FlightSubject {
         return returnVal;
     }
     
-    private String getNumberOfStops(Path route, String arrival) {
+    private String getNumberOfStops(Path route) {
         int stopCounter = 0;
         
         List<Flight> flights = this.searchHelper.convertPathToFlights(route);
@@ -174,11 +241,23 @@ public class FlightsManager implements FlightSubject {
         return foundFlights;
     }
     
-    public List<Flight> getFlightsAfterDate(List<Flight> flights, LocalDate date) {
+    private List<Flight> getFlightsAfterDate(LocalDate date) {
         ArrayList<Flight> appropriateFlights = new ArrayList<Flight>();
         
-        for(Flight flight : flights) {
+        for(Flight flight : this.allFlights) {
             if(isAfterDate(flight, date)) {
+                appropriateFlights.add(flight);
+            }
+        }
+        
+        return appropriateFlights;
+    }
+    
+    private List<Flight> getFlightsBetweenDates(LocalDate dDate, LocalDate rDate) {
+        ArrayList<Flight> appropriateFlights = new ArrayList<Flight>();
+        
+        for(Flight flight : this.allFlights) {
+            if(isAfterDate(flight, dDate) && isBeforeDate(flight, rDate)) {
                 appropriateFlights.add(flight);
             }
         }
@@ -196,6 +275,22 @@ public class FlightsManager implements FlightSubject {
         LocalDate flightDate = flight.getDepTime().toLocalDate();
         
         if(flightDate.isAfter(date) || flightDate.isEqual(date)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Checks if a flight is before a particular date.
+     * @param flight The flight object.
+     * @param date The date to compare.
+     * @return Returns true if a flight is scheduled before or at the given date.
+     */
+    public boolean isBeforeDate(Flight flight, LocalDate date) {
+        LocalDate flightDate = flight.getDepTime().toLocalDate();
+        
+        if(flightDate.isBefore(date)) {
             return true;
         } else {
             return false;
@@ -221,9 +316,9 @@ public class FlightsManager implements FlightSubject {
     }
 
     @Override
-    public void notifyObservers(ArrayList<String> data) {
+    public void notifyObservers(ArrayList<String> data, int type) {
         for(FlightObserver observer : this.observers) {
-            observer.update(data);
+            observer.update(data, type);
         }
     }
 }

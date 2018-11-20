@@ -24,7 +24,7 @@ public class FlightController {
         this.flightManager = manager;
         this.flightGUI = gui;
         
-        this.flightGUI.addSubmitListener(new SubmitListener());
+        this.flightGUI.addButtonListener(new ButtonListener());
         this.flightManager.register(this.flightGUI);
         
         // Set the years in the combo box in the gui
@@ -38,35 +38,62 @@ public class FlightController {
     
     private void getInput() {
         
+        boolean correct = true;
+        LocalDate date = null;
+        LocalDate depDate = null, retDate = null;
+        
         // TODO: validate input
         String departure = this.flightGUI.getDeparture().replaceAll("\\s+", "").toUpperCase();
         String arrival = this.flightGUI.getArrival().replaceAll("\\s+", "").toUpperCase();
         String[] dDate = this.flightGUI.getDepartDate();
+        String[] rDate = this.flightGUI.getReturnDate();
         String flightMethod = this.flightGUI.getFlightMethodChoice();
+        String oneWayOrReturn = this.flightGUI.getFlightGetReturnMethod();
         
-        System.out.println("Departure:\t" + departure);
-        System.out.println("Arrival:\t" + arrival);
-        
-        try {
-            int day = Integer.parseInt(dDate[0]);
-            int month = getMonthInt(dDate[1]);
-            int year = Integer.parseInt(dDate[2]);
-            
-            LocalDate date = LocalDate.of(year, month, day);
-                
-            if(flightMethod == "MULTIPLE") {
-                this.flightManager.getFlightsMultipleStop(departure, arrival, date);
-            }
-        } catch (Exception e) {
-            System.out.println(e.toString());
-            this.flightGUI.error("PARSING ERROR");
+        if(departure.isEmpty()) {
+            this.flightGUI.error("DEPARTURE");
+            correct = false;
         }
         
-        //this.flightManager.submitInput(departure, arrival, );
+        try {            
+            depDate = convertStringToDate(dDate, 0);
+            if(!rDate[0].isEmpty())
+                retDate = convertStringToDate(rDate, 1);
+        } catch (NumberFormatException e) {
+            correct = false;
+        }
+        
+        if(correct) {
+            if(flightMethod.equals("MULTIPLE")) {
+                if(oneWayOrReturn.equals("ONEWAY")) {
+                    this.flightManager.getFlightsMultipleStop(departure, arrival, depDate);
+                } else if(oneWayOrReturn.equals("RETURN")) {
+                    this.flightManager.getFlightsMultipleStop(departure, arrival, depDate, retDate);
+                }
+            }
+        }
+        
+    }
+    
+    private LocalDate convertStringToDate(String[] date, int dateType) {
+        int day = Integer.parseInt(date[0]);
+        int month = getMonthInt(date[1]);
+        if(month < 1) {
+            if(dateType == 0)
+                this.flightGUI.error("DATE");
+            else 
+                this.flightGUI.error("RDATE");
+            
+            throw new NumberFormatException();
+        }
+        int year = Integer.parseInt(date[2]);
+        
+        LocalDate ld = LocalDate.of(year, month, day);
+        return ld;
     }
     
     private int getMonthInt(String month) {
-        int monthInt = 0;
+        int monthInt;
         switch(month) {
             case "Jan.":
                 monthInt = 1;
@@ -104,20 +131,30 @@ public class FlightController {
             case "Dec.":
                 monthInt = 12;
                 break;
+            default:
+                monthInt = -1;
         }
         return monthInt;
     }
     
-    private class SubmitListener implements ActionListener {
+    private class ButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             String source = e.getActionCommand();
             
             switch(source) {
-                case "Search Flight":
+                case "Search Flights":
                     flightGUI.clearTable();
                     getInput();
+                    break;
+                    
+                case "One way":
+                    flightGUI.setRBEnable(false);
+                    break;
+                    
+                case "Return":
+                    flightGUI.setRBEnable(true);
                     break;
             }        
         }

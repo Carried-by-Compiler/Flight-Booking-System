@@ -15,5 +15,5 @@ import ui.FlightObserver;
 public interface FlightSubject {
     public void register(FlightObserver o);
     public void unregister(FlightObserver o);
-    public void notifyObservers(ArrayList<String> data);
+    public void notifyObservers(ArrayList<String> data, int type);
 }

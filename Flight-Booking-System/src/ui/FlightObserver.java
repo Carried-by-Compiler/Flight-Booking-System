@@ -15,5 +15,5 @@ import java.util.ArrayList;
 public interface FlightObserver {
     
     // TODO: change signature so that flight objects are not used
-    public void update(ArrayList<String> data);
+    public void update(ArrayList<String> data, int type);
 }
