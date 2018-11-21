@@ -29,14 +29,15 @@ public class Main {
         FlightGUI flightGUI = new FlightGUI();
         AirlineManager aManager = new AirlineManager();
         CustomerManager cManager = new CustomerManager();
+        LoginPage lPage = new LoginPage();
         
         
         FlightController fController = new FlightController(fManager, flightGUI);
-        CustomerController cController = new CustomerController();
+        CustomerController cController = new CustomerController(cManager, lPage);
         AirlineController aController = new AirlineController();
         
-        flightGUI.display();
-        //new LoginPage().setVisible(true);
+        //flightGUI.display();
+        cController.start();
         
         
         //new FlightSearch().setVisible(true);

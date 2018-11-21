@@ -1,6 +1,12 @@
 
 package ui.controllers;
+import business_layer.AirlineManager;
 import business_layer.CustomerManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import ui.FlightGUI;
+import ui.FlightSearch;
+import ui.LoginPage;
 
 /**
  *
@@ -24,5 +30,46 @@ import business_layer.CustomerManager;
     Managers don't assume there's a GUI - takes in values of the manager 
 */
 public class CustomerController {
+    private CustomerManager customerManager;
+    private AirlineManager airlineManager;
+    private LoginPage loginPage;
     
+    
+    public CustomerController(CustomerManager customerManager, LoginPage loginPage){
+        this.customerManager = customerManager;
+        this.loginPage = loginPage;
+        
+        this.loginPage.addSubmitListener(new SubmitListener());
+    }
+    
+    public void start(){
+        loginPage.display();
+    }
+    
+    public void checkLogin(){
+            //CustomerManager cm = new CustomerManager();
+            String email = loginPage.getEmail();
+            String password = loginPage.getPassword();
+            if(customerManager.searchCustomer(email, password).equals("")){
+                System.out.print("Customer does not exist");
+            }
+            else{
+                new FlightGUI().display();
+            }
+    }
+    
+    private class SubmitListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String source = e.getActionCommand();
+
+            switch(source) {
+                case "Login":
+                    checkLogin();
+                    break;
+            }        
+        }
+        
+    }
 }

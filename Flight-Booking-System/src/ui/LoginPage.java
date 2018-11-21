@@ -6,6 +6,7 @@
 package ui;
 
 import business_layer.CustomerManager;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -135,18 +136,30 @@ public class LoginPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void display() {    
+        this.setVisible(true);
+    }
+    
+    
+    public String getEmail(){
+        return this.jTextField1.getText();
+    }
+    
+    public String getPassword(){
+        return this.jPasswordField1.getText();
+    }
+    
+    public void addSubmitListener(ActionListener submitlistener) {
+        jButton1.addActionListener(submitlistener);
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
             String email = jTextField1.getText();
             String password = jPasswordField1.getText();
             //String password = jPasswordField1.getText();
-
-            CustomerManager cm = new CustomerManager();
-            if(cm.searchCustomer(email, password).equals("")){
-                System.out.print("Customer does not exist");
-            }
-            else{
-                new FlightSearch().setVisible(true);
-            }
+            
+            
+      
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
