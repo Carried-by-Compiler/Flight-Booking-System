@@ -20,14 +20,14 @@ public class FlightInfoDisplay extends javax.swing.JFrame {
     public FlightInfoDisplay() {
         initComponents();
     }
-       public void display(String [] s) {
-        displayFlightInfo(s);
+       public void display() {
+        displayFlightInfo();
         this.setVisible(true);
     }
-   private void displayFlightInfo(String [] s){
-      stored =s;
-      String results = s[0] + "\n" + s[1] + "\n" + s[2] + "\n" + s[3] + "\n";
-      departAirport.setText(results);
+   private void displayFlightInfo(){
+     /* stored =s;
+      String results = s[0] + "\n" + s[1] + "\n" + s[2] + "\n" + s[3] + "\n";*/
+      departAirport.setText("Temp");
    }
     /**
      * This method is called from within the constructor to initialize the form.

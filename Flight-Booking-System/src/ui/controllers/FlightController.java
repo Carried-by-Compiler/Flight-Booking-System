@@ -10,7 +10,9 @@ import business_layer.NoFlightsFoundException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import ui.BookingGUI;
 import ui.FlightGUI;
+import ui.FlightInfoDisplay;
 
 /**
  *
@@ -20,7 +22,8 @@ public class FlightController {
     
     private FlightsManager flightManager;
     private FlightGUI flightGUI;
-    
+    private FlightInfoDisplay flightInfo;
+    private BookingGUI newbooking;
     /**
      * Initialize the controller class connecting the flights gui and its appropriate manager.
      * @param manager The manager handling the GUI.
@@ -89,7 +92,7 @@ public class FlightController {
                     if(oneWayOrReturn.equals("ONEWAY")) {
                         this.flightManager.getDirectFlights(departure, arrival, depDate);
                     } else if(oneWayOrReturn.equals("RETURN")) {
-                        this.flightManager.getDirectFlights(departure, arrival, depDate, retDate);
+                       this.flightManager.getDirectFlights(departure, arrival, depDate, retDate);
                     }
                 } catch(NoFlightsFoundException e) {
                     this.flightGUI.error(e.getErrorID());
@@ -179,6 +182,10 @@ public class FlightController {
                     
                 case "Return":
                     flightGUI.setRBEnable(true);
+                    break;
+                    
+                case "Submit Selection":
+                    flightInfo.display();
                     break;
             }        
         }

@@ -189,7 +189,7 @@ public class BookingGUI extends javax.swing.JFrame {
 
     private void priorityCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priorityCheckActionPerformed
         // TODO add your handling code here:
-        newBook.
+        
     }//GEN-LAST:event_priorityCheckActionPerformed
 
     private void insuranceCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insuranceCheckActionPerformed

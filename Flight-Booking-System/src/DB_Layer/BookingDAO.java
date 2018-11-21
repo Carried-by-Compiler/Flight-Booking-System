@@ -14,19 +14,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  *
- * @author eogha
+ * @author Aoife
  */
-public class BookingDao implements Dao<Booking>{
-
+public class BookingDAO implements Dao<Booking>{
+/**
+ * Will be accepting the information from the search GUI 
+ * The information will then be displayed and ONLY when the user selects buy move to new window
+ * New window will then display policy additions i.e number of tickets, baggage, priority ect 
+ * When 'booking' will not store booking until purchased. 
+ * 
+ */
     private String filename;
     private BufferedReader br;
     private BufferedWriter bw;
     
     
-    public BookingDao(){
+    public BookingDAO(){
         this.filename = "./Database/Booking.csv";
         
 
@@ -60,7 +65,7 @@ public class BookingDao implements Dao<Booking>{
         }
         
         if(found) {
-            return new Booking(Integer.parseInt(lineSplit[0]), lineSplit[1], lineSplit[2]);
+           return new Booking();
         } 
         else {
             return null;
