@@ -7,12 +7,8 @@ package business_layer;
 
 import DB_Layer.Dao;
 import DB_Layer.DaoFactory;
-import business_layer.shortestpathalgos.Edge;
-import business_layer.shortestpathalgos.FlightSearchStrategy;
 import business_layer.shortestpathalgos.Graph;
-import business_layer.shortestpathalgos.Node;
 import business_layer.shortestpathalgos.Path;
-import business_layer.shortestpathalgos.Yen;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,8 +17,7 @@ import java.util.List;
 import ui.FlightObserver;
 
 /**
- *
- * @author John Rey Juele
+ * Flight Manager
  */
 public class FlightsManager implements FlightSubject {
     public static final int DEPART = 0;
@@ -73,7 +68,10 @@ public class FlightsManager implements FlightSubject {
             LocalDate dDate) throws NoFlightsFoundException {
         List<Flight>  appropriateFlights = getFlightsAfterDate(dDate);
         ArrayList<Flight> foundFlights = new ArrayList<Flight>();
+        ArrayList<String> data = new ArrayList<String>();
         boolean found = false;
+        
+        String airlines, numOfStops, times, cities, cost;
         
         for(Flight f : appropriateFlights) {
             
@@ -91,19 +89,32 @@ public class FlightsManager implements FlightSubject {
         } else {
             Collections.sort(foundFlights); // Sorts by flight cost.
             for(Flight flight : foundFlights) {
-                String airlines = getAssociatedAirlines(flight);
+                airlines = getAssociatedAirlines(flight);
+                numOfStops = "0"; 
+                times = getScheduleOfEachFlight(flight);
+                cities = departure + "," + arrival;
+                cost = String.valueOf(flight.getCost());
                 
+                data.add(airlines);
+                data.add(numOfStops);
+                data.add(times);
+                data.add(cities);
+                data.add(String.valueOf(flight.getCost()));
+                
+                this.notifyObservers(data, DEPART);
             }
         }
         
         return foundFlights;
     }
     
-    /*
-    public ArrayList<Flight> getDirectFlights(String departure, String arrival, LocalDate dDate, LocalDate rDate) {
+    
+    public ArrayList<Flight> getDirectFlights(String departure, String arrival, 
+            LocalDate dDate, LocalDate rDate) throws NoFlightsFoundException {
         ArrayList<Flight> flights = dao.getAll();
         ArrayList<Flight> foundFlights = new ArrayList<Flight>();
         
+        /*
         for(Flight f : flights) {
             
             if(f.getDeparture().equals(criteria[0]) && f.getArrival().equals(criteria[1])) {
@@ -113,9 +124,9 @@ public class FlightsManager implements FlightSubject {
             }
             
         }
-        
+        */
         return foundFlights;
-    } */
+    } 
     
     /**
      * Obtain flights that is in accordance to user's input where connecting flights
@@ -294,8 +305,6 @@ public class FlightsManager implements FlightSubject {
         return airlineName;
     }
     
-    
-    
     private String getNumberOfStops(Path route) {
         int stopCounter = 0;
         
@@ -319,6 +328,20 @@ public class FlightsManager implements FlightSubject {
             
             returnVal += dTime.toString() + "/" + aTime.toString() + ",";
         }
+        
+        return returnVal;
+    }
+    
+    private String getScheduleOfEachFlight(Flight flight) {
+        LocalDateTime dTime;
+        LocalDateTime aTime;    
+        
+        String returnVal = "";
+        
+        dTime = flight.getDepTime();
+        aTime = flight.getArrTime();
+
+        returnVal += dTime.toString() + "/" + aTime.toString();
         
         return returnVal;
     }

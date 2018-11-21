@@ -45,6 +45,10 @@ public class FlightController {
         this.flightGUI.setYearComboBox(years);
     }
     
+    public void startGUI() {
+        this.flightGUI.display();
+    }
+    
     private void getInput() {
         
         boolean correct = true;

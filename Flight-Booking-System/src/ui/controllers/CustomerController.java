@@ -2,10 +2,10 @@
 package ui.controllers;
 import business_layer.AirlineManager;
 import business_layer.CustomerManager;
+import business_layer.FlightsManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import ui.FlightGUI;
-import ui.FlightSearch;
 import ui.LoginPage;
 
 /**
@@ -54,7 +54,10 @@ public class CustomerController {
                 System.out.print("Customer does not exist");
             }
             else{
-                new FlightGUI().display();
+                FlightsManager manager = new FlightsManager();
+                FlightGUI gui = new FlightGUI();
+                FlightController fController = new FlightController(manager, gui);
+                fController.startGUI();
             }
     }
     
