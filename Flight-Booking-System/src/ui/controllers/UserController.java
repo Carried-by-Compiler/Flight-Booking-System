@@ -5,6 +5,7 @@ import business_layer.CustomerManager;
 import business_layer.FlightsManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import ui.FlightGUI;
 import ui.LoginPage;
 
@@ -29,13 +30,13 @@ import ui.LoginPage;
     Registration is not an option for the airline - We'll assume all our airlines are registered. 
     Managers don't assume there's a GUI - takes in values of the manager 
 */
-public class CustomerController {
+public class UserController {
     private CustomerManager customerManager;
     private AirlineManager airlineManager;
     private LoginPage loginPage;
     
     
-    public CustomerController(CustomerManager customerManager, LoginPage loginPage){
+    public UserController(CustomerManager customerManager, LoginPage loginPage){
         this.customerManager = customerManager;
         this.loginPage = loginPage;
         
@@ -51,13 +52,14 @@ public class CustomerController {
             String email = loginPage.getEmail();
             String password = loginPage.getPassword();
             if(customerManager.searchCustomer(email, password).equals("")){
-                System.out.print("Customer does not exist");
+              JOptionPane.showMessageDialog(null, "Incorrect Email or Password","Unable to login",JOptionPane.WARNING_MESSAGE);
             }
             else{
-                FlightsManager manager = new FlightsManager();
-                FlightGUI gui = new FlightGUI();
-                FlightController fController = new FlightController(manager, gui);
+                FlightsManager fManager = new FlightsManager();
+                FlightGUI flightGUI = new FlightGUI();
+                FlightController fController = new FlightController(fManager, flightGUI);
                 fController.startGUI();
+                loginPage.closeLogin();
             }
     }
     
