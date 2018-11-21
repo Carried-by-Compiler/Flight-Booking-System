@@ -16,6 +16,7 @@ import business_layer.shortestpathalgos.Yen;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import ui.FlightObserver;
 
@@ -41,6 +42,16 @@ public class FlightsManager implements FlightSubject {
         this.allFlights = this.dao.getAll();
     }
     
+    /**
+     * Adds and stores a flight.
+     * @param id The flight ID.
+     * @param aid The airline ID that is supporting the flight.
+     * @param dep The departure city.
+     * @param arr The destination city.
+     * @param dTime The scheduled departure of the flight.
+     * @param aTime The scheduled arrival of the flight.
+     * @param cost The cost of the flight.
+     */
     public void addFlight(int id, int aid, String dep, String arr, 
         LocalDateTime dTime, LocalDateTime aTime, double cost) {
         
@@ -48,6 +59,63 @@ public class FlightsManager implements FlightSubject {
         
         dao.add(f);
     }
+    
+    /**
+     * Searches for direct flights. This method only looks for one way flights between 
+     * the two cities provided.
+     * @param departure The departure city.
+     * @param arrival The arriving city.
+     * @param dDate The departing date of flights to search for.
+     * @return A list of flights in accordance to the search criteria of the user.
+     * @throws NoFlightsFoundException If no flights were found. 
+     */
+    public ArrayList<Flight> getDirectFlights(String departure, String arrival, 
+            LocalDate dDate) throws NoFlightsFoundException {
+        List<Flight>  appropriateFlights = getFlightsAfterDate(dDate);
+        ArrayList<Flight> foundFlights = new ArrayList<Flight>();
+        boolean found = false;
+        
+        for(Flight f : appropriateFlights) {
+            
+            String flightDeparture = f.getDeparture();
+            String flightArrival = f.getArrival();
+            
+            if(flightDeparture.equals(departure) && flightArrival.equals(arrival)) {
+                found = true;
+                foundFlights.add(f);
+            }
+        }
+        
+        if(!found) {
+            throw new NoFlightsFoundException("No flights to " + departure + " was found.");
+        } else {
+            Collections.sort(foundFlights); // Sorts by flight cost.
+            for(Flight flight : foundFlights) {
+                String airlines = getAssociatedAirlines(flight);
+                
+            }
+        }
+        
+        return foundFlights;
+    }
+    
+    /*
+    public ArrayList<Flight> getDirectFlights(String departure, String arrival, LocalDate dDate, LocalDate rDate) {
+        ArrayList<Flight> flights = dao.getAll();
+        ArrayList<Flight> foundFlights = new ArrayList<Flight>();
+        
+        for(Flight f : flights) {
+            
+            if(f.getDeparture().equals(criteria[0]) && f.getArrival().equals(criteria[1])) {
+                if(f.compareTo(LocalDate.parse(criteria[2])) == 0) {
+                    foundFlights.add(f);
+                }
+            }
+            
+        }
+        
+        return foundFlights;
+    } */
     
     /**
      * Obtain flights that is in accordance to user's input where connecting flights
@@ -191,6 +259,11 @@ public class FlightsManager implements FlightSubject {
             routes.removeAll(removedPaths);
     }
     
+    /**
+     * Gets all the airline names involved in the flight path.
+     * @param route Path object representing a flight path.
+     * @return A comma delimited string of all the airlines involved.
+     */
     private String getAssociatedAirlines(Path route) {
         AirlineManager manager = new AirlineManager();
         String returnVal = "";
@@ -206,6 +279,22 @@ public class FlightsManager implements FlightSubject {
         
         return returnVal;
     }
+    
+    /**
+     * Get the airline name providing the given flight.
+     * @param flight The flight object.
+     * @return The airline name.
+     */
+    private String getAssociatedAirlines(Flight flight) {
+        AirlineManager manager = new AirlineManager();
+        
+        int airlineID = flight.getAirLineID();
+        String airlineName = manager.searchAirline(airlineID);
+        
+        return airlineName;
+    }
+    
+    
     
     private String getNumberOfStops(Path route) {
         int stopCounter = 0;
@@ -246,23 +335,11 @@ public class FlightsManager implements FlightSubject {
         return returnVal;
     }
     
-    public ArrayList<Flight> getFlightsOneWay(String[] criteria) {
-        ArrayList<Flight> flights = dao.getAll();
-        ArrayList<Flight> foundFlights = new ArrayList<Flight>();
-        
-        for(Flight f : flights) {
-            
-            if(f.getDeparture().equals(criteria[0]) && f.getArrival().equals(criteria[1])) {
-                if(f.compareTo(LocalDate.parse(criteria[2])) == 0) {
-                    foundFlights.add(f);
-                }
-            }
-            
-        }
-        
-        return foundFlights;
-    }
-    
+    /**
+     * Returns a list of flights that are scheduled after the given date.
+     * @param date The date.
+     * @return A list of flights.
+     */
     private List<Flight> getFlightsAfterDate(LocalDate date) {
         ArrayList<Flight> appropriateFlights = new ArrayList<Flight>();
         
@@ -288,7 +365,7 @@ public class FlightsManager implements FlightSubject {
     }
     
     /**
-     * Checks if a flight is after a particular date.
+     * Checks if a flight is scheduled after or on a particular date.
      * @param flight The flight object
      * @param date The date.
      * @return Returns true if a flight is scheduled after or at the given date.

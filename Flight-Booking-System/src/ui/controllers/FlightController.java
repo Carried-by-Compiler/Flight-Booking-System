@@ -21,6 +21,11 @@ public class FlightController {
     private FlightsManager flightManager;
     private FlightGUI flightGUI;
     
+    /**
+     * Initialize the controller class connecting the flights gui and its appropriate manager.
+     * @param manager The manager handling the GUI.
+     * @param gui The Graphical User Interface class that will display flight details.
+     */
     public FlightController(FlightsManager manager, FlightGUI gui) {
         this.flightManager = manager;
         this.flightGUI = gui;

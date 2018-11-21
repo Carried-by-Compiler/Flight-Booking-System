@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  *
  * @author John Rey Juele
  */
-public class Flight implements Comparable<LocalDate>, Edge<Flight> {
+public class Flight implements Comparable<Flight>, Edge<Flight> {
     
     private int id;
     private int airLineID;
@@ -129,15 +129,16 @@ public class Flight implements Comparable<LocalDate>, Edge<Flight> {
     }
 
     @Override
-    public int compareTo(LocalDate o) {
-        if(this.depTime.toLocalDate().isEqual(o)) {
+    public int compareTo(Flight otherFlight) {
+        double otherFlightCost = otherFlight.getCost();
+        
+        if(this.cost == otherFlightCost) {
             return 0;
-        } else if(this.depTime.toLocalDate().isBefore(o)) {
+        } else if(this.cost > otherFlightCost) {
             return 1;
         } else {
             return -1;
         }
-    
     } 
     
     @Override
