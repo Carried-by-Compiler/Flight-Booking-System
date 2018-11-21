@@ -83,6 +83,16 @@ public class FlightController {
                     }
                 } catch(NoFlightsFoundException e) {
                     this.flightGUI.error(e.getErrorID());
+                } 
+            } else if(flightMethod.equals("DIRECT"))  {
+                try {
+                    if(oneWayOrReturn.equals("ONEWAY")) {
+                        this.flightManager.getDirectFlights(departure, arrival, depDate);
+                    } else if(oneWayOrReturn.equals("RETURN")) {
+                        this.flightManager.getDirectFlights(departure, arrival, depDate, retDate);
+                    }
+                } catch(NoFlightsFoundException e) {
+                    this.flightGUI.error(e.getErrorID());
                 }
             }
         }
