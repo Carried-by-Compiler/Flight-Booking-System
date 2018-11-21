@@ -98,7 +98,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
         jSeparator2 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        submitSelection = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Search Flights");
@@ -315,10 +315,10 @@ public class FlightGUI extends JFrame implements FlightObserver {
         });
         jScrollPane2.setViewportView(jTable1);
 
-        jButton1.setText("Submit Selection");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        submitSelection.setText("Submit Selection");
+        submitSelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                submitSelectionActionPerformed(evt);
             }
         });
 
@@ -338,7 +338,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
                 .addContainerGap(50, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(383, 383, 383)
-                .addComponent(jButton1)
+                .addComponent(submitSelection)
                 .addContainerGap(384, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -357,16 +357,16 @@ public class FlightGUI extends JFrame implements FlightObserver {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
-                .addComponent(jButton1)
+                .addComponent(submitSelection)
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void submitSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitSelectionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_submitSelectionActionPerformed
 
     private void dateCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateCBActionPerformed
         // TODO add your handling code here:
@@ -385,6 +385,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
         submitButton.addActionListener(buttonPressListener);
         oneWayRB.addActionListener(buttonPressListener);
         returnRB.addActionListener(buttonPressListener);
+        submitSelection.addActionListener(buttonPressListener);
     }
     
     public String getDeparture() {
@@ -573,7 +574,6 @@ public class FlightGUI extends JFrame implements FlightObserver {
     private javax.swing.JTable departFlightTable;
     private javax.swing.JTextField departTextField;
     private javax.swing.JRadioButton directRB;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -596,6 +596,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
     private javax.swing.JLabel returnDateLabel;
     private javax.swing.JRadioButton returnRB;
     private javax.swing.JButton submitButton;
+    private javax.swing.JButton submitSelection;
     private javax.swing.JComboBox<String> yearCB;
     // End of variables declaration//GEN-END:variables
 }

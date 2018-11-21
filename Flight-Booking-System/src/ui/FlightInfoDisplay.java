@@ -6,6 +6,7 @@
 package ui;
 
 import business_layer.BookingManager;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -29,6 +30,10 @@ public class FlightInfoDisplay extends javax.swing.JFrame {
       String results = s[0] + "\n" + s[1] + "\n" + s[2] + "\n" + s[3] + "\n";*/
       departAirport.setText("Temp");
    }
+   
+     public void addButtonListener(ActionListener buttonPressListener) {
+        BuyButton.addActionListener(buttonPressListener);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -201,10 +206,7 @@ public class FlightInfoDisplay extends javax.swing.JFrame {
 
     private void BuyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuyButtonActionPerformed
         // TODO add your handling code here:
-        BookingGUI buy = new BookingGUI();
-        buy.infoPassed(stored);
-        buy.setVisible(true);
-        this.setVisible(false);
+
     }//GEN-LAST:event_BuyButtonActionPerformed
 
     private void CancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelButtonMouseClicked

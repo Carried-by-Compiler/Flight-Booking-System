@@ -32,6 +32,7 @@ public class FlightController {
     public FlightController(FlightsManager manager, FlightGUI gui) {
         this.flightManager = manager;
         this.flightGUI = gui;
+        this.flightInfo = new FlightInfoDisplay();
         
         this.flightGUI.addButtonListener(new ButtonListener());
         this.flightManager.register(this.flightGUI);
@@ -48,7 +49,13 @@ public class FlightController {
     public void startGUI() {
         this.flightGUI.display();
     }
-    
+    public void startFlightInfoGUI(){
+        this.flightInfo.display();
+    }
+    public void startBookingInfoGUI(){
+        newbooking = new BookingGUI();
+        this.newbooking.display();
+    }
     private void getInput() {
         
         boolean correct = true;
@@ -173,7 +180,7 @@ public class FlightController {
         @Override
         public void actionPerformed(ActionEvent e) {
             String source = e.getActionCommand();
-            
+           
             switch(source) {
                 case "Search Flights":
                     flightGUI.clearTable();
@@ -189,7 +196,12 @@ public class FlightController {
                     break;
                     
                 case "Submit Selection":
-                    flightInfo.display();
+                   startFlightInfoGUI();
+                   // System.out.println("Submit");
+                    break;
+                    
+                case "Buy":
+                    startBookingInfoGUI();
                     break;
             }        
         }

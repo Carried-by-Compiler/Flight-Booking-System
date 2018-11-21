@@ -20,6 +20,9 @@ public class BookingGUI extends javax.swing.JFrame {
         initComponents();
        
     }
+    public void display(){
+       this.setVisible(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
