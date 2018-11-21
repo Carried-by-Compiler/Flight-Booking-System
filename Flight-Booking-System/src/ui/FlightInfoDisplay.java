@@ -93,23 +93,9 @@ public class FlightInfoDisplay extends javax.swing.JFrame {
 
         jLabel5.setText("Cost of Flights:");
 
-        departAirport.setText("jLabel7");
-
         jLabel7.setText("Airline(s) Used:");
 
         jLabel8.setText("Layover(s):");
-
-        departTime.setText("jLabel9");
-
-        arrAirport.setText("jLabel10");
-
-        arrTime.setText("jLabel11");
-
-        additionalStops.setText("jLabel12");
-
-        baseCost.setText("jLabel13");
-
-        airlineNames.setText("jLabel14");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

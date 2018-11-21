@@ -177,9 +177,6 @@
     <Component class="javax.swing.JLabel" name="jLabel6">
     </Component>
     <Component class="javax.swing.JLabel" name="departAirport">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel7"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
@@ -192,34 +189,16 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="departTime">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel9"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="arrAirport">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel10"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="arrTime">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel11"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="additionalStops">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel12"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="baseCost">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel13"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="airlineNames">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel14"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>
