@@ -15,7 +15,7 @@ import business_layer.CustomerManager;
 import java.util.Scanner;
 import ui.controllers.FlightController;
 import ui.controllers.AirlineController;
-import ui.controllers.CustomerController;
+import ui.controllers.UserController;
 
 /**
  *
@@ -33,7 +33,7 @@ public class Main {
         
         
         FlightController fController = new FlightController(fManager, flightGUI);
-        CustomerController cController = new CustomerController(cManager, lPage);
+        UserController cController = new UserController(cManager, lPage);
         AirlineController aController = new AirlineController();
         
         //flightGUI.display();
