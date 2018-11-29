@@ -10,20 +10,29 @@ import business_layer.NoFlightsFoundException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import ui.BookingGUI;
 import ui.FlightGUI;
 import ui.FlightInfoDisplay;
+import ui.FlightObserver;
 
 /**
  *
  * @author John Rey Juele
  */
-public class FlightController {
+public class FlightController implements FlightObserver {
     
     private FlightsManager flightManager;
     private FlightGUI flightGUI;
     private FlightInfoDisplay flightInfo;
     private BookingGUI newbooking;
+    
+    // Lists that will store the details of each flights found in the search.
+    private List<ArrayList<String>> departPathDetails;
+    private List<ArrayList<String>> returnPathDetails;
+    
+    
     /**
      * Initialize the controller class connecting the flights gui and its appropriate manager.
      * @param manager The manager handling the GUI.
@@ -35,7 +44,10 @@ public class FlightController {
         this.flightInfo = new FlightInfoDisplay();
         
         this.flightGUI.addButtonListener(new ButtonListener());
-        this.flightManager.register(this.flightGUI);
+        this.flightManager.register(this);
+       
+        this.departPathDetails = new ArrayList<ArrayList<String>>();
+        this.returnPathDetails = new ArrayList<ArrayList<String>>();
         
         // Set the years in the combo box in the gui
         LocalDate now = LocalDate.now();
@@ -49,13 +61,16 @@ public class FlightController {
     public void startGUI() {
         this.flightGUI.display();
     }
+    
     public void startFlightInfoGUI(){
         this.flightInfo.display();
     }
+    
     public void startBookingInfoGUI(){
         newbooking = new BookingGUI();
         this.newbooking.display();
     }
+    
     private void getInput() {
         
         boolean correct = true;
@@ -175,6 +190,73 @@ public class FlightController {
         return monthInt;
     }
     
+    /**
+     * Updates the GUI with the passed in data.
+     * 
+     * data[0] = Airline names
+     * data[1] = Number of stops
+     * data[2] = Scheduled times of each flight
+     * data[3] = The cities within the flight path.
+     * data[4] = The total cost of the flight path.
+     * 
+     * @param data A list containing the data to display
+     */
+    @Override
+    public void update(ArrayList<String> data, int type) {
+        String airlines = "", depDate = "", arrDate = "";
+        Object[] dataRow = new Object[5];
+        String[] parsedInfo;
+        
+        parsedInfo = data.get(0).split(",");
+        
+        airlines += parseAirlines(parsedInfo);
+        
+        parsedInfo = data.get(2).split(",");
+        depDate = getStartingTime(parsedInfo);
+        arrDate = getEndingTime(parsedInfo);
+        
+        dataRow[0] = airlines; //flight.getAirLineID();
+        dataRow[1] = depDate; //flight.getDepTime().format(formatter);
+        dataRow[2] = arrDate;//flight.getArrTime().format(formatter);
+        dataRow[3] = data.get(1);//1;
+        dataRow[4] = "€" + data.get(4); //flight.getCost();
+        
+        switch(type) {
+            case FlightsManager.DEPART:
+                this.departPathDetails.add(data);
+                this.flightGUI.fillDepartTable(dataRow);
+                break;
+            
+            case FlightsManager.RETURN:
+                this.returnPathDetails.add(data);
+                this.flightGUI.fillReturnTable(dataRow);
+                break;
+        }
+    }
+    
+    private String parseAirlines(String[] airlines) {
+        String output = "";
+        for(int i = 0; i < airlines.length;  i++) {
+            output += airlines[i] + ", ";
+        }
+        
+        return output;
+    }
+    
+    private String getStartingTime(String[] schedule) {
+        String firstFlight = schedule[0];
+        String[] parsedTime = firstFlight.split("/");
+        
+        return parsedTime[0];
+    }
+    
+    private String getEndingTime(String[] schedule) {
+        String lastFlight = schedule[schedule.length - 1];
+        String[] parsedTime = lastFlight.split("/");
+        
+        return parsedTime[1];
+    }
+    
     private class ButtonListener implements ActionListener {
 
         @Override
@@ -183,6 +265,10 @@ public class FlightController {
            
             switch(source) {
                 case "Search Flights":
+                    
+                    departPathDetails.clear();
+                    returnPathDetails.clear();
+                    
                     flightGUI.clearTable();
                     getInput();
                     break;

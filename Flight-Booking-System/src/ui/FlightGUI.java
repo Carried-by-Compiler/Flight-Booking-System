@@ -20,10 +20,11 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author John Rey Juele
  */
-public class FlightGUI extends JFrame implements FlightObserver {
+public class FlightGUI extends JFrame {
     
-    private List<ArrayList<String>> departPathDetails;
-    private List<ArrayList<String>> returnPathDetails;
+    
+    private DefaultTableModel tbDepartModel;
+    private DefaultTableModel tbReturnModel;
     
     /**
      * Creates new form FlightsSearch
@@ -52,10 +53,13 @@ public class FlightGUI extends JFrame implements FlightObserver {
         }
         //</editor-fold>
         //</editor-fold>
-        this.departPathDetails = new ArrayList<ArrayList<String>>();
-        this.returnPathDetails = new ArrayList<ArrayList<String>>();
+        
+        
         
         initComponents();
+        
+        this.tbDepartModel = (DefaultTableModel) this.departFlightTable.getModel();
+        this.tbReturnModel = (DefaultTableModel) this.returnFlightTable.getModel();
     }
 
     /**
@@ -97,7 +101,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
         jLabel6 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        returnFlightTable = new javax.swing.JTable();
         submitSelection = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -290,7 +294,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         jLabel6.setText("Returning Flights");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        returnFlightTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -313,7 +317,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(returnFlightTable);
 
         submitSelection.setText("Submit Selection");
         submitSelection.addActionListener(new java.awt.event.ActionListener() {
@@ -485,85 +489,36 @@ public class FlightGUI extends JFrame implements FlightObserver {
     }
     
     /**
-     * Updates the GUI with the passed in data
-     * 
-     * data[0] = Airline names
-     * data[1] = Number of stops
-     * data[2] = Scheduled times of each flight
-     * data[3] = The cities within the flight path.
-     * data[4] = The total cost of the flight path.
-     * 
-     * @param data A list containing the data to display
+     * Fills the depart table of flights.
+     * @param row The data row to output to the table.
      */
-    @Override
-    public void update(ArrayList<String> data, int type) {
-        DefaultTableModel tbDepartModel = (DefaultTableModel) this.departFlightTable.getModel();
-        DefaultTableModel tbReturnModel = (DefaultTableModel) this.jTable1.getModel();
-        Object[] dataRow = new Object[5];
-        
-        String airlines = "";
-        String depDate, arrDate;
-        
-        // TODO: find a more appropriate place to handle parsing logic. I'm tired now :'(
-        String[] parsedInfo = data.get(0).split(",");
-        airlines += parseAirlines(parsedInfo);
-
-        parsedInfo = data.get(2).split(",");
-        depDate = getStartingTime(parsedInfo);
-        arrDate = getEndingTime(parsedInfo);
-
-        dataRow[0] = airlines; //flight.getAirLineID();
-        dataRow[1] = depDate; //flight.getDepTime().format(formatter);
-        dataRow[2] = arrDate;//flight.getArrTime().format(formatter);
-        dataRow[3] = data.get(1);//1;
-        dataRow[4] = "€" + data.get(4); //flight.getCost();
-        
-        
-        
-        if(type == FlightsManager.DEPART) {
-            this.departPathDetails.add(data);
-            tbDepartModel.addRow(dataRow);
-        } else if(type == FlightsManager.RETURN) {
-            this.returnPathDetails.add(data);
-            tbReturnModel.addRow(dataRow);
-        }
+    public void fillDepartTable(Object[] row) {
+        this.tbDepartModel.addRow(row);
+    }
+    
+    /**
+     * Fills the return table of flights.
+     * @param row The data row to output to the table.
+     */
+    public void fillReturnTable(Object[] row) {
+        this.tbReturnModel.addRow(row);
     }
     
     /**
      * Clear all info from the flights table.
      */
     public void clearTable() {
-        this.departPathDetails.clear();
-        this.returnPathDetails.clear();
+        
         DefaultTableModel model = (DefaultTableModel) this.departFlightTable.getModel();
         model.setRowCount(0);
-        model = (DefaultTableModel) this.jTable1.getModel();
+        model = (DefaultTableModel) this.returnFlightTable.getModel();
         model.setRowCount(0);
         this.revalidate();
     }
     
-    private String parseAirlines(String[] airlines) {
-        String output = "";
-        for(int i = 0; i < airlines.length;  i++) {
-            output += airlines[i] + ", ";
-        }
-        
-        return output;
-    }
     
-    private String getStartingTime(String[] schedule) {
-        String firstFlight = schedule[0];
-        String[] parsedTime = firstFlight.split("/");
-        
-        return parsedTime[0];
-    }
     
-    private String getEndingTime(String[] schedule) {
-        String lastFlight = schedule[schedule.length - 1];
-        String[] parsedTime = lastFlight.split("/");
-        
-        return parsedTime[1];
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField arrivalTextField;
@@ -586,7 +541,6 @@ public class FlightGUI extends JFrame implements FlightObserver {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JComboBox<String> monthCB;
     private javax.swing.JRadioButton noStopRB;
     private javax.swing.JRadioButton oneWayRB;
@@ -594,6 +548,7 @@ public class FlightGUI extends JFrame implements FlightObserver {
     private javax.swing.JComboBox<String> rMonthCB;
     private javax.swing.JComboBox<String> rYearCB;
     private javax.swing.JLabel returnDateLabel;
+    private javax.swing.JTable returnFlightTable;
     private javax.swing.JRadioButton returnRB;
     private javax.swing.JButton submitButton;
     private javax.swing.JButton submitSelection;
