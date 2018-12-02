@@ -51,6 +51,11 @@ public class AirlineManagerTest {
       
        assertEquals("AERLINGUS",ar.searchAirline(1));
        assertEquals("RYANAIR",ar.searchAirline(2));
-       assertEquals("KML",ar.searchAirline(10));
+       assertEquals("KLM",ar.searchAirline(10));
+    }
+    
+    @Test
+    public void testInvalidSearchAirlineByID(){
+       assertEquals("Airline does not exist",ar.searchAirline(1000));
     }
 }
