@@ -151,6 +151,7 @@ public class LoginPage extends javax.swing.JFrame {
     
     public void addSubmitListener(ActionListener submitlistener) {
         jButton1.addActionListener(submitlistener);
+        jButton2.addActionListener(submitlistener);
     }
     
     public void closeLogin(){
@@ -167,9 +168,7 @@ public class LoginPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-           this.dispose();
-           Registration reg = new Registration();
-           reg.setVisible(true);
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     
