@@ -48,20 +48,20 @@ public class UserController {
     }
     
     public void checkLogin(){
-            //CustomerManager cm = new CustomerManager();
-            String email = loginPage.getEmail();
-            String password = loginPage.getPassword();
-            int response = customerManager.searchCustomer(email, password);
-            if(response == -1){
-              JOptionPane.showMessageDialog(null, "Incorrect Email or Password","Unable to login",JOptionPane.WARNING_MESSAGE);
-            }
-            else{
-                FlightsManager fManager = new FlightsManager();
-                FlightGUI flightGUI = new FlightGUI();
-                FlightController fController = new FlightController(fManager, flightGUI,response);
-                fController.startGUI();
-                loginPage.closeLogin();
-            }
+        //CustomerManager cm = new CustomerManager();
+        String email = loginPage.getEmail();
+        String password = loginPage.getPassword();
+        int response = customerManager.searchCustomer(email, password);
+        if(response == -1){
+          JOptionPane.showMessageDialog(null, "Incorrect Email or Password","Unable to login",JOptionPane.WARNING_MESSAGE);
+        }
+        else{
+            FlightsManager fManager = new FlightsManager();
+            FlightGUI flightGUI = new FlightGUI();
+            FlightController fController = new FlightController(fManager, flightGUI,response);
+            fController.startGUI();
+            loginPage.closeLogin();
+        }
     }
     
     public void checkRegister(){
@@ -82,9 +82,8 @@ public class UserController {
         else{
             //Idealy we would use a database to to set an id automatically for the user but in this case we are just using a randome number simulator as proxy
             int random = (int)(Math.random() * 50 + 1);
-            CustomerManager cm = new CustomerManager();
-            cm.addCustomer(random ,name, surname, email, password);
-            JOptionPane.showMessageDialog(null, "You have been Registered, please login","Register successful",JOptionPane.OK_OPTION);
+            this.customerManager.addCustomer(random ,name, surname, email, password);
+            JOptionPane.showMessageDialog(null, "You have been Registered, please login","Register successful", JOptionPane.INFORMATION_MESSAGE);
             //start();
         }
     }
