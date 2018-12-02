@@ -7,6 +7,10 @@ package ui;
 
 import business_layer.BookingManager;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,41 +21,133 @@ public class FlightInfoDisplay extends javax.swing.JFrame {
     /**
      * Creates new form FlightInfoDisplay
      */
-    private String [] stored;
+    private boolean hasReturn;
+    
+    private ArrayList<String> outboundFlight;
+    private ArrayList<String> returnFlight;
+    
+    private DefaultTableModel tbDepartModel;
+    private DefaultTableModel tbReturnModel;
+    
     public FlightInfoDisplay() {
         
         initComponents();
+        
+        this.tbDepartModel = (DefaultTableModel) this.outboundDetails.getModel();
+        this.tbReturnModel = (DefaultTableModel) this.returnDetails.getModel();
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                
+                tbDepartModel.setRowCount(0);
+                tbReturnModel.setRowCount(0);
+            }
+        });
     }
-       public void display(String [] info) {
-        this.stored=info;
+    
+    public void display(ArrayList<String> o, ArrayList<String> r) {
+        this.hasReturn = true;
+        this.outboundFlight = o;
+        this.returnFlight = r;
+        displayFlightInfo();
+        this.setVisible(true);
+        
+        System.out.println(o);
+        System.out.println(r);
+    }
+    
+    public void display(ArrayList<String> o) {
+        this.hasReturn = false;
+        this.outboundFlight = o;
         displayFlightInfo();
         this.setVisible(true);
     }
+    
    private void displayFlightInfo(){
-       if(stored.length > 1){ /*attempting to adjust for direct flights and  return flights here, its a mess rn*/
-       System.out.println("Display");
-       String [] depFlight = this.stored[0].split(",");
-       String [] retFlight = this.stored[1].split(",");
-       Double totalCost = 0.0;
-       totalCost +=Double.parseDouble(depFlight[7]);
-       totalCost +=Double.parseDouble(retFlight[7]);
-       String cost = totalCost +"";
-       String airlines = depFlight[0] + "," +  retFlight[0];
-       this.airlineNames.setText(airlines);
-       this.departAirport.setText(depFlight[5]);
-       this.arrAirport.setText(depFlight[6]);
-       this.arrTime.setText(depFlight[3]);
-       this.retDepAirport.setText(retFlight[5]);
-       this.retArrAirport.setText(retFlight[6]);
-       this.retdepTime.setText(retFlight[3]);
-       this.totalCost.setText(cost);}
-       else{
-          String [] depFlight = this.stored[0].split(",");
-          this.airlineNames.setText(depFlight[0]);
-          this.departAirport.setText(depFlight[5]);
-          this.arrAirport.setText(depFlight[6]);
-          this.arrTime.setText(depFlight[3]);
-           this.totalCost.setText(depFlight[7]);
+       
+       Object[] datarow = new Object[5];
+       
+       if(hasReturn) { /*attempting to adjust for direct flights and  return flights here, its a mess rn*/
+           
+           /*
+            System.out.println("Display");
+            String [] depFlight = this.stored[0].split(",");
+            String [] retFlight = this.stored[1].split(",");
+            Double totalCost = 0.0;
+            totalCost +=Double.parseDouble(depFlight[7]);
+            totalCost +=Double.parseDouble(retFlight[7]);
+            String cost = totalCost +"";
+            String airlines = depFlight[0] + "," +  retFlight[0];
+            this.airlineNames.setText(airlines);
+            this.departAirport.setText(depFlight[5]);
+            this.arrAirport.setText(depFlight[6]);
+            this.arrTime.setText(depFlight[3]);
+            this.retDepAirport.setText(retFlight[5]);
+            this.retArrAirport.setText(retFlight[6]);
+            this.retdepTime.setText(retFlight[3]);
+            this.totalCost.setText(cost);}
+           */
+           
+           // Handle Outbound flights
+           String[] airlines = this.outboundFlight.get(0).split(",");
+           String[] times = this.outboundFlight.get(2).split(",");
+           String[] cities = this.outboundFlight.get(3).split(",");
+           
+           for(int i = 0; i < airlines.length; i++) {
+               datarow[0] = airlines[i];
+               datarow[1] = cities[i];
+               datarow[2] = cities[i + 1];
+               
+               String[] t = times[i].split("/");
+               datarow[3] = t[0];
+               datarow[4] = t[1];
+               
+               this.tbDepartModel.addRow(datarow);
+           }
+           
+           // Hanlde Return flights
+           airlines = this.returnFlight.get(0).split(",");
+           times = this.returnFlight.get(2).split(",");
+           cities = this.returnFlight.get(3).split(",");
+           
+           for(int i = 0; i < airlines.length; i++) {
+               datarow[0] = airlines[i];
+               datarow[1] = cities[i];
+               datarow[2] = cities[i + 1];
+               
+               String[] t = times[i].split("/");
+               datarow[3] = t[0];
+               datarow[4] = t[1];
+               
+               this.tbReturnModel.addRow(datarow);
+           }
+           
+           
+       } else {
+           String[] airlines = this.outboundFlight.get(0).split(",");
+           String[] times = this.outboundFlight.get(2).split(",");
+           String[] cities = this.outboundFlight.get(3).split(",");
+           
+           for(int i = 0; i < airlines.length; i++) {
+               datarow[0] = airlines[i];
+               datarow[1] = cities[i];
+               datarow[2] = cities[i + 1];
+               
+               String[] t = times[i].split("/");
+               datarow[3] = t[0];
+               datarow[4] = t[1];
+               
+               this.tbDepartModel.addRow(datarow);
+           }
+           /*
+            String [] depFlight = this.stored[0].split(",");
+            this.airlineNames.setText(depFlight[0]);
+            this.departAirport.setText(depFlight[5]);
+            this.arrAirport.setText(depFlight[6]);
+            this.arrTime.setText(depFlight[3]);
+            this.totalCost.setText(depFlight[7]);
+           */
        }
    }
 
@@ -64,207 +160,94 @@ public class FlightInfoDisplay extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        CancelButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        outboundDetails = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        departAirport = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        departTime = new javax.swing.JLabel();
-        arrAirport = new javax.swing.JLabel();
-        arrTime = new javax.swing.JLabel();
-        airlineNames = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        retDepAirport = new javax.swing.JLabel();
-        retdepTime = new javax.swing.JLabel();
-        retArrAirport = new javax.swing.JLabel();
-        retArrTime = new javax.swing.JLabel();
-        totalCost = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        returnDetails = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Flight Information");
 
-        CancelButton.setText("Return");
-        CancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                CancelButtonMouseClicked(evt);
+        outboundDetails.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Airline", "City 1", "City 2", "Departure Time", "Arrival Time"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        CancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancelButtonActionPerformed(evt);
+        jScrollPane1.setViewportView(outboundDetails);
+
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabel8.setText("Outbound");
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabel1.setText("Return");
+
+        returnDetails.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Airline", "City 1", "City 2", "Departure Time", "Arrival Time"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-
-        jLabel1.setText("Flying From:");
-
-        jLabel2.setText("Arriving To:");
-
-        jLabel3.setText("Depature Time:");
-
-        jLabel4.setText("Arrival Time:");
-
-        jLabel5.setText("Cost of Flights:");
-
-        jLabel7.setText("Airline(s) Used:");
-
-        jLabel9.setText("Flying From:");
-
-        jLabel10.setText("Return Flight");
-
-        jLabel11.setText("First Flight");
-
-        jLabel12.setText("Departure Time:");
-
-        jLabel13.setText("Arriving To:");
-
-        jLabel14.setText("Arrival Time:");
+        jScrollPane2.setViewportView(returnDetails);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(37, 37, 37)
-                                .addComponent(departTime, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addGap(22, 22, 22)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(arrAirport, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(arrTime, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(departAirport, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(414, 414, 414)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(14, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(CancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(airlineNames, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(retDepAirport, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(26, 26, 26)
-                                        .addComponent(retdepTime, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(retArrAirport, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap())))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(jLabel5)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(totalCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(retArrTime, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel8)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(50, 50, 50)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 604, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 604, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel11))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(retDepAirport, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(departAirport, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(jLabel12)
-                                                .addComponent(retdepTime, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel13)
-                                            .addComponent(retArrAirport))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(retArrTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(11, 11, 11)
-                                        .addComponent(departTime, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(arrAirport, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(arrTime, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(47, 47, 47))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(145, 145, 145)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel5)
-                            .addComponent(totalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(airlineNames, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(50, 50, 50)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(CancelButton)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
-    }//GEN-LAST:event_CancelButtonActionPerformed
-
-    private void CancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelButtonMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_CancelButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -296,35 +279,17 @@ public class FlightInfoDisplay extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FlightInfoDisplay().setVisible(true);
+                //new FlightInfoDisplay().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton CancelButton;
-    private javax.swing.JLabel airlineNames;
-    private javax.swing.JLabel arrAirport;
-    private javax.swing.JLabel arrTime;
-    private javax.swing.JLabel departAirport;
-    private javax.swing.JLabel departTime;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel retArrAirport;
-    private javax.swing.JLabel retArrTime;
-    private javax.swing.JLabel retDepAirport;
-    private javax.swing.JLabel retdepTime;
-    private javax.swing.JLabel totalCost;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable outboundDetails;
+    private javax.swing.JTable returnDetails;
     // End of variables declaration//GEN-END:variables
 }

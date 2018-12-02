@@ -150,7 +150,7 @@ public class FlightGUI extends JFrame {
 
         buttonGroup10.add(noStopRB);
         noStopRB.setSelected(true);
-        noStopRB.setText("Non-Stop");
+        noStopRB.setText("With stops");
         noStopRB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 noStopRBActionPerformed(evt);
@@ -520,18 +520,24 @@ public class FlightGUI extends JFrame {
     public void fillReturnTable(Object[] row) {
         this.tbReturnModel.addRow(row);
     }
-    public int[] getSelectedRows(){
-         System.out.println("Selected Rows");
-         int [] flightsInfo = new int[4];
-         int depRow = this.departFlightTable.getSelectedRow();
-         int depCol = this.departFlightTable.getColumnCount();
-         int arrRow = this.returnFlightTable.getSelectedRow();
-         int arrCol = this.returnFlightTable.getColumnCount();
+    
+    public int[] getSelectedRows() {
+        int arrRow = -1;
+        System.out.println("Selected Rows");
+        int [] flightsInfo = new int[2];
+        int depRow = this.departFlightTable.getSelectedRow();
+
+        boolean isEmpty = this.returnFlightTable.getSelectionModel().isSelectionEmpty();
+         
+        if(!isEmpty) {
+            arrRow = this.returnFlightTable.getSelectedRow();
+        } else {
+            arrRow = -1;
+        }
+       
         
          flightsInfo[0] = depRow;
-         flightsInfo[1] = depCol;
-         flightsInfo[2] = arrRow;
-         flightsInfo[3] = arrCol;
+         flightsInfo[1] = arrRow;
          return flightsInfo;
     }
     

@@ -64,10 +64,19 @@ public class FlightController implements FlightObserver {
     }
     
     public void startFlightInfoGUI(){
+        ArrayList<String> aInfo = new ArrayList<String>();
         System.out.println("INFO DISPLAY");
         int [] selectRow =getRows();
-        String [] info = getFlightinfo(selectRow);
-        this.flightInfo.display(info);
+        //String [] info = getFlightinfo(selectRow);
+        ArrayList<String> dInfo = this.departPathDetails.get(selectRow[0]);
+        if(selectRow[1] != -1) {
+            aInfo = this.returnPathDetails.get(selectRow[1]);
+            this.flightInfo.display(dInfo, aInfo);
+        } else {
+            this.flightInfo.display(dInfo);
+        }
+        
+        
     }
     
     public void startBookingInfoGUI(String [] flightInfo){
@@ -76,6 +85,7 @@ public class FlightController implements FlightObserver {
                 BookingController bcontroller = new BookingController(bmanager, bookGUI,flightInfo,loggedInUser);
                 bcontroller.startGUI();
     }
+    
     public void checkRows(){
         System.out.println("Checking Rows");
        int [] positions = this.flightGUI.getSelectedRows();
@@ -83,10 +93,12 @@ public class FlightController implements FlightObserver {
        startBookingInfoGUI(flightInfo);
     
     }
+    
     public int [] getRows(){
           int [] positions = this.flightGUI.getSelectedRows();
           return positions;
     }
+    
     public String [] getFlightinfo(int [] positions){
         System.out.println("Flight Info");
         String[] info = new String[2];

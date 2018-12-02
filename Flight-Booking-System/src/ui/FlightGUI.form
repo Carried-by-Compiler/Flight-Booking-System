@@ -294,7 +294,7 @@
               <ComponentRef name="buttonGroup10"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="Non-Stop"/>
+            <Property name="text" type="java.lang.String" value="With stops"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="noStopRBActionPerformed"/>
