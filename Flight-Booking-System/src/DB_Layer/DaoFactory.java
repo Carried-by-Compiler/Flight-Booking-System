@@ -14,7 +14,7 @@ public class DaoFactory {
     public static final int AIRLINE = 1;
     public static final int FLIGHT  = 2;
     public static final int CUSTOMER = 3;
-    public static final int BOOKING = 4;
+    public static final int BOOK = 4;
     public static Dao getDao(int type) {
         Dao d = null;
         
@@ -31,7 +31,7 @@ public class DaoFactory {
                 d = new CustomerDAO();
                 break;
                 
-            case BOOKING: 
+            case BOOK: 
                 d = new BookingDAO();
                 break;
         }

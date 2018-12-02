@@ -51,13 +51,14 @@ public class UserController {
             //CustomerManager cm = new CustomerManager();
             String email = loginPage.getEmail();
             String password = loginPage.getPassword();
-            if(customerManager.searchCustomer(email, password).equals("")){
+            int response = customerManager.searchCustomer(email, password);
+            if(response == -1){
               JOptionPane.showMessageDialog(null, "Incorrect Email or Password","Unable to login",JOptionPane.WARNING_MESSAGE);
             }
             else{
                 FlightsManager fManager = new FlightsManager();
                 FlightGUI flightGUI = new FlightGUI();
-                FlightController fController = new FlightController(fManager, flightGUI);
+                FlightController fController = new FlightController(fManager, flightGUI,response);
                 fController.startGUI();
                 loginPage.closeLogin();
             }

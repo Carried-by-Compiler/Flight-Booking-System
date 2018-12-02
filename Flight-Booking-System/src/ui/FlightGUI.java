@@ -103,6 +103,7 @@ public class FlightGUI extends JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         returnFlightTable = new javax.swing.JTable();
         submitSelection = new javax.swing.JButton();
+        infoButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Search Flights");
@@ -319,10 +320,17 @@ public class FlightGUI extends JFrame {
         });
         jScrollPane2.setViewportView(returnFlightTable);
 
-        submitSelection.setText("Submit Selection");
+        submitSelection.setText("Purchase");
         submitSelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitSelectionActionPerformed(evt);
+            }
+        });
+
+        infoButton.setText("More Info");
+        infoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                infoButtonActionPerformed(evt);
             }
         });
 
@@ -331,7 +339,7 @@ public class FlightGUI extends JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
+                .addContainerGap(62, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -339,11 +347,13 @@ public class FlightGUI extends JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jSeparator2)
                     .addComponent(jScrollPane2))
-                .addContainerGap(50, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(383, 383, 383)
-                .addComponent(submitSelection)
-                .addContainerGap(384, Short.MAX_VALUE))
+                .addContainerGap(63, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(infoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(submitSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(289, 289, 289))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,9 +370,11 @@ public class FlightGUI extends JFrame {
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addComponent(submitSelection)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(submitSelection)
+                    .addComponent(infoButton))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -379,6 +391,10 @@ public class FlightGUI extends JFrame {
     private void noStopRBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noStopRBActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_noStopRBActionPerformed
+
+    private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_infoButtonActionPerformed
 
     
     public void display() {
@@ -503,6 +519,21 @@ public class FlightGUI extends JFrame {
     public void fillReturnTable(Object[] row) {
         this.tbReturnModel.addRow(row);
     }
+    public int[] getSelectedRows(){
+         System.out.println("Selected Rows");
+         int [] flightsInfo = new int[4];
+         int depRow = this.departFlightTable.getSelectedRow();
+         int depCol = this.departFlightTable.getColumnCount();
+         int arrRow = this.returnFlightTable.getSelectedRow();
+         int arrCol = this.returnFlightTable.getColumnCount();
+        
+         flightsInfo[0] = depRow;
+         flightsInfo[1] = depCol;
+         flightsInfo[2] = arrRow;
+         flightsInfo[3] = arrCol;
+         return flightsInfo;
+    }
+    
     
     /**
      * Clear all info from the flights table.
@@ -529,6 +560,7 @@ public class FlightGUI extends JFrame {
     private javax.swing.JTable departFlightTable;
     private javax.swing.JTextField departTextField;
     private javax.swing.JRadioButton directRB;
+    private javax.swing.JButton infoButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -37,18 +37,17 @@ public class CustomerManager {
             return customer.toString();
     }
     
-    public String searchCustomer(String email, String password){
+    public int searchCustomer(String email, String password){
         Customer customer = dao.get(email, password);
         
         if(customer == null){
-            return "";
+            return -1;
         }
         else
         {
             System.out.println(customer.getEmail());
-            return customer.toString();
+            return customer.getId();
         }
     }
-    
     
 }

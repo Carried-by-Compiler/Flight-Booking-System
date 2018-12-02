@@ -32,7 +32,7 @@ public class Main {
         LoginPage lPage = new LoginPage();
         
         
-        FlightController fController = new FlightController(fManager, flightGUI);
+     //   FlightController fController = new FlightController(fManager, flightGUI);
         UserController cController = new UserController(cManager, lPage);
         AirlineController aController = new AirlineController();
         

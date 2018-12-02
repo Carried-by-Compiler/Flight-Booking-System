@@ -6,10 +6,13 @@
 package DB_Layer;
 
 import business_layer.Booking;
+import design_decorator.Book;
+import design_decorator.seatingDecorator;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -18,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Aoife
  */
-public class BookingDAO implements Dao<Booking>{
+public class BookingDAO implements Dao<Book>{
 /**
  * Will be accepting the information from the search GUI 
  * The information will then be displayed and ONLY when the user selects buy move to new window
@@ -76,12 +79,29 @@ public class BookingDAO implements Dao<Booking>{
     public Booking get(String email, String password) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
     @Override
-    public void add(Booking n) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void add(Book n) {
+        int bookingid = n.getBookingId();
+        String info = n.toString();
+        try {
+            Booking existingBooking = this.get(bookingid);
+            
+            if(existingBooking != null) {
+                // Fix error message
+                System.out.println(bookingid + " already exists!");
+            } else {
+                bw = new BufferedWriter(new FileWriter(filename, true));
+                bw.append(info);
+                bw.close();
+                
+                System.out.println("Successfully added: " + bookingid);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AirlineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+  
     @Override
     public void delete(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -93,9 +113,11 @@ public class BookingDAO implements Dao<Booking>{
     }
 
     @Override
-    public ArrayList<Booking> getAll() {
+    public ArrayList<Book> getAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+   
 
     
 }

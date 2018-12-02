@@ -5,6 +5,7 @@
  */
 package ui.controllers;
 
+import business_layer.BookingManager;
 import business_layer.FlightsManager;
 import business_layer.NoFlightsFoundException;
 import java.awt.event.ActionEvent;
@@ -26,8 +27,7 @@ public class FlightController implements FlightObserver {
     private FlightsManager flightManager;
     private FlightGUI flightGUI;
     private FlightInfoDisplay flightInfo;
-    private BookingGUI newbooking;
-    
+    private int loggedInUser;
     // Lists that will store the details of each flights found in the search.
     private List<ArrayList<String>> departPathDetails;
     private List<ArrayList<String>> returnPathDetails;
@@ -38,9 +38,10 @@ public class FlightController implements FlightObserver {
      * @param manager The manager handling the GUI.
      * @param gui The Graphical User Interface class that will display flight details.
      */
-    public FlightController(FlightsManager manager, FlightGUI gui) {
+    public FlightController(FlightsManager manager, FlightGUI gui, int user) {
         this.flightManager = manager;
         this.flightGUI = gui;
+        this.loggedInUser = user;
         this.flightInfo = new FlightInfoDisplay();
         
         this.flightGUI.addButtonListener(new ButtonListener());
@@ -66,11 +67,40 @@ public class FlightController implements FlightObserver {
         this.flightInfo.display();
     }
     
-    public void startBookingInfoGUI(){
-        newbooking = new BookingGUI();
-        this.newbooking.display();
+    public void startBookingInfoGUI(String [] flightInfo){
+                BookingManager bmanager = new BookingManager();
+                BookingGUI bookGUI = new BookingGUI();
+                BookingController bcontroller = new BookingController(bmanager, bookGUI,flightInfo,loggedInUser);
+                bcontroller.startGUI();
     }
+    public void checkRows(){
+        System.out.println("Checking Rows");
+       int [] positions = this.flightGUI.getSelectedRows();
+       String [] flightInfo = getFlightinfo(positions);
+       startBookingInfoGUI(flightInfo);
     
+    }
+    public String [] getFlightinfo(int [] positions){
+        System.out.println("Flight Info");
+        String[] info = new String[2];
+        System.out.println("depature");
+            String dep = "";
+            for(int a =0; a < positions[1]; a++){
+               dep += this.departPathDetails.get(positions[0]).get(a)+ ",";
+               
+            }
+          System.out.println(dep);
+          info [0]= dep;
+          System.out.println("arrival");
+          String ar = "";
+          for(int a =0; a < positions[3]; a++){
+             ar+= this.returnPathDetails.get(positions [2]).get(a) + ",";       
+          
+            }
+          System.out.println(ar);
+          info [1]= ar;
+        return info;
+    }
     private void getInput() {
         
         boolean correct = true;
@@ -281,14 +311,14 @@ public class FlightController implements FlightObserver {
                     flightGUI.setRBEnable(true);
                     break;
                     
-                case "Submit Selection":
-                   startFlightInfoGUI();
+                case "Purchase":
+                   checkRows();
                    // System.out.println("Submit");
                     break;
-                    
-                case "Buy":
-                    startBookingInfoGUI();
+                case "More Info":
+                    startFlightInfoGUI();
                     break;
+                
             }        
         }
         
