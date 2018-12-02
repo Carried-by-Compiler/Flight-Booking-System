@@ -455,7 +455,7 @@ public class FlightGUI extends JFrame {
         return selected;
     }
     
-    public String getFlightGetReturnMethod() {
+    public String getFlightReturnMethod() {
         String selected = "";
         
         if(oneWayRB.isSelected()) {

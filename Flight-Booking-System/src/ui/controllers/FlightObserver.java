@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui;
+package ui.controllers;
 
-import business_layer.Flight;
 import java.util.ArrayList;
 
 /**

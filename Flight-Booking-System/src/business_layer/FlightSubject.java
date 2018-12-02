@@ -6,7 +6,7 @@
 package business_layer;
 
 import java.util.ArrayList;
-import ui.FlightObserver;
+import ui.controllers.FlightObserver;
 
 /**
  *

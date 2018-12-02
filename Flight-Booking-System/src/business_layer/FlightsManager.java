@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import ui.FlightObserver;
+import ui.controllers.FlightObserver;
 
 /**
  * Flight Manager

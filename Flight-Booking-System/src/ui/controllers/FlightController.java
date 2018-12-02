@@ -16,7 +16,6 @@ import java.util.List;
 import ui.BookingGUI;
 import ui.FlightGUI;
 import ui.FlightInfoDisplay;
-import ui.FlightObserver;
 
 /**
  *
@@ -89,7 +88,7 @@ public class FlightController implements FlightObserver {
     public void checkFlightInfo(){
        System.out.println("Checking Flight Info");
        String flightMethod = this.flightGUI.getFlightMethodChoice();
-       String oneWayOrReturn = this.flightGUI.getFlightGetReturnMethod();
+       String oneWayOrReturn = this.flightGUI.getFlightReturnMethod();
        if(flightMethod.equals("MULTIPLE")) {
                     if(oneWayOrReturn.equals("ONEWAY")) {
                         System.out.println("multi one here");
@@ -178,7 +177,7 @@ public class FlightController implements FlightObserver {
         String[] dDate = this.flightGUI.getDepartDate();
         String[] rDate = this.flightGUI.getReturnDate();
         String flightMethod = this.flightGUI.getFlightMethodChoice();
-        String oneWayOrReturn = this.flightGUI.getFlightGetReturnMethod();
+        String oneWayOrReturn = this.flightGUI.getFlightReturnMethod();
         
         if(departure.isEmpty()) {
             this.flightGUI.error("DEPARTURE");
