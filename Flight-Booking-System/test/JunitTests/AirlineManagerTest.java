@@ -44,13 +44,18 @@ public class AirlineManagerTest {
     //
     // @Test
     // public void hello() {}
-    public AirlineManager ar = new AirlineManager();
+    private AirlineManager ar = new AirlineManager();
     
     @Test
     public void testSearchAirlineByID(){
       
        assertEquals("AERLINGUS",ar.searchAirline(1));
        assertEquals("RYANAIR",ar.searchAirline(2));
-       assertEquals("KML",ar.searchAirline(10));
+       assertEquals("KLM",ar.searchAirline(10));
+    }
+    
+    @Test
+    public void testInvalidSearchAirlineByID(){
+       assertEquals("Airline does not exist",ar.searchAirline(1000));
     }
 }

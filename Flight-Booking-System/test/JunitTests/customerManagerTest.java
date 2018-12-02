@@ -39,12 +39,8 @@ public class customerManagerTest {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-    public CustomerManager cm = new CustomerManager();
+
+    private CustomerManager cm = new CustomerManager();
     @Test
     public void testValidInfoCustomerSearch(){
         assertEquals(1,cm.searchCustomer("DAVE@GMAIL.COM", "MA-BOY"));
