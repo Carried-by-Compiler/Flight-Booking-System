@@ -21,26 +21,29 @@ import design_decorator.seatingDecorator;
 public class BookingManager {
       private Dao<Book> dao;
     
-    public BookingManager() {
+    public BookingManager() { 
         this.dao = DaoFactory.getDao(DaoFactory.BOOK);
     }
     
-    public void addBooking(int user, String [] info, String seatType, Boolean baggage, Boolean Insurance){
+    public void addBooking(int user, String [] info, String seatType, Boolean baggage, Boolean Insurance){ /*Currently works with SeatingDecorator ONLY*/
          Seating stype= Seating.valueOf(seatType);
          if(!(baggage) && !(Insurance)){         
           dao.add(new seatingDecorator(new Booking(user, info),stype));
         }else{
            if((baggage) && (Insurance)){               
-             dao.add(new baggageDecorator(new insuranceDecorator((new seatingDecorator(new Booking(user, info),stype)),Insurance),baggage));
+          //   dao.add(new baggageDecorator(new insuranceDecorator((new seatingDecorator(new Booking(user, info),stype)),Insurance),baggage));
+             dao.add(new seatingDecorator(new Booking(user, info),stype));
            }else{
               if((baggage) && !(Insurance)){              
-               dao.add(new baggageDecorator((new seatingDecorator(new Booking(user, info),stype)),baggage));
+            //   dao.add(new baggageDecorator((new seatingDecorator(new Booking(user, info),stype)),baggage));
+             dao.add(new seatingDecorator(new Booking(user, info),stype));
               
            }else{
                  if(!(baggage) && (Insurance)){
-                     dao.add(new insuranceDecorator((new seatingDecorator(new Booking(user, info),stype)),Insurance)); 
+               //      dao.add(new insuranceDecorator((new seatingDecorator(new Booking(user, info),stype)),Insurance)); 
+                dao.add(new seatingDecorator(new Booking(user, info),stype));
               }else{  
-                     dao.add(new Booking(user,info));                     
+                   dao.add(new seatingDecorator(new Booking(user, info),stype));                   
                  }}
            }
         }
