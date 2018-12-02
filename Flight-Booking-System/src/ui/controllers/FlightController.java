@@ -79,20 +79,50 @@ public class FlightController implements FlightObserver {
         
     }
     
-    public void startBookingInfoGUI(String [] flightInfo){
+    public void startBookingInfoGUI(String [] flightInfo,boolean returnFlight){
                 BookingManager bmanager = new BookingManager();
                 BookingGUI bookGUI = new BookingGUI();
-                BookingController bcontroller = new BookingController(bmanager, bookGUI,flightInfo,loggedInUser);
+                BookingController bcontroller = new BookingController(bmanager, bookGUI,flightInfo,loggedInUser, returnFlight);
                 bcontroller.startGUI();
     }
     
-    public void checkRows(){
-        System.out.println("Checking Rows");
-       int [] positions = this.flightGUI.getSelectedRows();
-       String [] flightInfo = getFlightinfo(positions);
-       startBookingInfoGUI(flightInfo);
+    public void checkFlightInfo(){
+       System.out.println("Checking Flight Info");
+       String flightMethod = this.flightGUI.getFlightMethodChoice();
+       String oneWayOrReturn = this.flightGUI.getFlightGetReturnMethod();
+       if(flightMethod.equals("MULTIPLE")) {
+                    if(oneWayOrReturn.equals("ONEWAY")) {
+                        System.out.println("multi one here");
+                       int [] positions = this.flightGUI.getSelectedRows();
+                       String [] flightInfo = getFlightinfo(positions);
+                       startBookingInfoGUI(flightInfo,false);
+                    } else if(oneWayOrReturn.equals("RETURN")) {
+                       System.out.println("no i'm here");
+                       int [] positions = this.flightGUI.getSelectedRows();
+                       String [] flightInfo = getFlightinfo(positions);
+                       startBookingInfoGUI(flightInfo,true);
+                    }
+                
+            }else if(flightMethod.equals("DIRECT"))  {
+                
+                    if(oneWayOrReturn.equals("ONEWAY")) {
+                        System.out.println("directly one here");
+                         int [] positions = this.flightGUI.getSelectedRows();
+                       String [] flightInfo = getFlightinfo(positions);
+                       startBookingInfoGUI(flightInfo,false);
+                     
+                    } else if(oneWayOrReturn.equals("RETURN")) {
+                        System.out.println("im here");
+                       int [] positions = this.flightGUI.getSelectedRows();
+                       String [] flightInfo = getFlightinfo(positions);
+                       startBookingInfoGUI(flightInfo,true);
+                    }
+                }
+            
+      
     
     }
+    
     
     public int [] getRows(){
           int [] positions = this.flightGUI.getSelectedRows();
@@ -100,11 +130,25 @@ public class FlightController implements FlightObserver {
     }
     
     public String [] getFlightinfo(int [] positions){
+        System.out.println("INFO");
+        String [] info;
+         if(positions[1]== -1){ // one way
+           System.out.println("ONE WAY");
+          info = new String [1];
+          String dep = "";
+          int colAmount = this.departPathDetails.get(positions[0]).size();
+          for(int a =0; a < colAmount; a++){
+               dep += this.departPathDetails.get(positions[0]).get(a)+ ",";               
+            }
+          System.out.println(dep);
+          info[0] = dep;
+        }else{
+         info = new String [2];
         System.out.println("Flight Info");
-        String[] info = new String[2];
         System.out.println("depature");
             String dep = "";
-            for(int a =0; a < positions[1]; a++){
+            int colAmount = this.departPathDetails.get(positions[0]).size();
+            for(int a =0; a < colAmount ; a++){
                dep += this.departPathDetails.get(positions[0]).get(a)+ ",";
                
             }
@@ -112,12 +156,14 @@ public class FlightController implements FlightObserver {
           info [0]= dep;
           System.out.println("arrival");
           String ar = "";
-          for(int a =0; a < positions[3]; a++){
-             ar+= this.returnPathDetails.get(positions [2]).get(a) + ",";       
+          int col = this.returnPathDetails.get(positions[1]).size();
+          for(int a =0; a < col; a++){
+             ar+= this.returnPathDetails.get(positions [1]).get(a) + ",";       
           
             }
           System.out.println(ar);
           info [1]= ar;
+        }
         return info;
     }
     private void getInput() {
@@ -331,8 +377,7 @@ public class FlightController implements FlightObserver {
                     break;
                     
                 case "Purchase":
-                   checkRows();
-                   // System.out.println("Submit");
+                   checkFlightInfo();
                     break;
                 case "More Info":
                     startFlightInfoGUI();

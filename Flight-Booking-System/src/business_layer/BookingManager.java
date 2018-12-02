@@ -25,25 +25,25 @@ public class BookingManager {
         this.dao = DaoFactory.getDao(DaoFactory.BOOK);
     }
     
-    public void addBooking(int user, String [] info, String seatType, Boolean baggage, Boolean Insurance){ /*Currently works with SeatingDecorator ONLY*/
+    public void addBooking(int user, String [] info, String seatType, Boolean baggage, Boolean Insurance, Boolean returnFlight){ /*Currently works with SeatingDecorator ONLY*/
          Seating stype= Seating.valueOf(seatType);
          if(!(baggage) && !(Insurance)){         
-          dao.add(new seatingDecorator(new Booking(user, info),stype));
+          dao.add(new seatingDecorator(new Booking(user, info, returnFlight),stype));
         }else{
            if((baggage) && (Insurance)){               
           //   dao.add(new baggageDecorator(new insuranceDecorator((new seatingDecorator(new Booking(user, info),stype)),Insurance),baggage));
-             dao.add(new seatingDecorator(new Booking(user, info),stype));
+             dao.add(new seatingDecorator(new Booking(user, info,returnFlight),stype));
            }else{
               if((baggage) && !(Insurance)){              
             //   dao.add(new baggageDecorator((new seatingDecorator(new Booking(user, info),stype)),baggage));
-             dao.add(new seatingDecorator(new Booking(user, info),stype));
+             dao.add(new seatingDecorator(new Booking(user, info,returnFlight),stype));
               
            }else{
                  if(!(baggage) && (Insurance)){
                //      dao.add(new insuranceDecorator((new seatingDecorator(new Booking(user, info),stype)),Insurance)); 
-                dao.add(new seatingDecorator(new Booking(user, info),stype));
+                dao.add(new seatingDecorator(new Booking(user, info,returnFlight),stype));
               }else{  
-                   dao.add(new seatingDecorator(new Booking(user, info),stype));                   
+                   dao.add(new seatingDecorator(new Booking(user, info,returnFlight),stype));                   
                  }}
            }
         }

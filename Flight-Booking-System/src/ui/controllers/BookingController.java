@@ -19,11 +19,13 @@ public class BookingController {
     private BookingGUI bookGUI;
     private String [] flightInfo;
     private int loggedInUser;
-   public BookingController(BookingManager bmanager, BookingGUI bookGUI, String [] fInfo, int user) {
+    private boolean returnFlight;
+   public BookingController(BookingManager bmanager, BookingGUI bookGUI, String [] fInfo, int user, boolean returnFlight) {
         this.bookManager = bmanager;
         this.bookGUI = bookGUI;
         this.flightInfo = fInfo;
         this.loggedInUser = user;
+        this.returnFlight = returnFlight;
         this.bookGUI.addButtonListener(new ButtonListener());
     } 
 
@@ -34,7 +36,7 @@ public class BookingController {
      String seatType = this.bookGUI.getDropDown();
      boolean insurance = this.bookGUI.getInsuranceClicked();
      boolean baggage  = this.bookGUI.getBaggaeChecked();
-     bookManager.addBooking(loggedInUser,flightInfo,seatType,baggage,insurance);
+     bookManager.addBooking(loggedInUser,flightInfo,seatType,baggage,insurance,returnFlight);
       
     }
     public void finishBooking(){

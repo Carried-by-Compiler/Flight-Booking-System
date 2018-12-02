@@ -15,23 +15,31 @@ public class Booking implements Book {
     private String [] flightInfo;
     private double totalCost;
     private double baseCost;
+    private boolean returnFlight;
     public Booking(){}
-    public Booking(int userID, String[]flightInfo){
+    public Booking(int userID, String[]flightInfo,boolean returnFlight){
         this.bookingID = (int)(Math.random() * 5000 + 1);
         this.customerID = userID;
         this.flightInfo= flightInfo;
         this.totalCost = calcTotalCost();
         this.baseCost = calcTotalCost();
+        this.returnFlight = returnFlight;
     }   
     @Override
     public double calcTotalCost(){
+       Double cost = 0.0;
+       if(this.returnFlight){
        String [] flightD = this.flightInfo[0].split(",");
        String [] flightA = this.flightInfo[1].split(",");
        String costD = flightD[flightD.length-1];
        String costA = flightA[flightA.length-1];
-       Double cost = 0.0;
+    
        cost+= Double.parseDouble(costD);
        cost+= Double.parseDouble(costA);
+       }else{
+           String [] flightD = this.flightInfo[0].split(",");
+           cost+= Double.parseDouble(flightD[flightD.length-1]);
+       }
        return cost;    
     }
     public int getBookingId(){return this.bookingID;}
@@ -41,7 +49,11 @@ public class Booking implements Book {
     public double getTotalCost(){return this.totalCost;}
     @Override
     public String toString() {
-       return  this.bookingID + ","+this.customerID + "," + flightInfo[0] +  ","+ flightInfo[1] + "," + this.totalCost;   
+        if(returnFlight){  return  this.bookingID + ","+this.customerID + "," + flightInfo[0] +  ","+ flightInfo[1] + "," + this.totalCost;   }
+        else{
+            return  this.bookingID + ","+this.customerID +  ","+ flightInfo[0] + "," + this.totalCost;  
+        }
+     
     }
    
 }
