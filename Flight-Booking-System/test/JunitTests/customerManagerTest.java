@@ -44,7 +44,7 @@ public class customerManagerTest {
     //
     // @Test
     // public void hello() {}
-    public CustomerManager cm = new CustomerManager();
+    private CustomerManager cm = new CustomerManager();
     @Test
     public void testValidInfoCustomerSearch(){
         assertEquals(1,cm.searchCustomer("DAVE@GMAIL.COM", "MA-BOY"));

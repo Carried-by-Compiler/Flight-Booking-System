@@ -44,7 +44,7 @@ public class AirlineManagerTest {
     //
     // @Test
     // public void hello() {}
-    public AirlineManager ar = new AirlineManager();
+    private AirlineManager ar = new AirlineManager();
     
     @Test
     public void testSearchAirlineByID(){
