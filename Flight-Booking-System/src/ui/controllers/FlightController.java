@@ -64,7 +64,10 @@ public class FlightController implements FlightObserver {
     }
     
     public void startFlightInfoGUI(){
-        this.flightInfo.display();
+        System.out.println("INFO DISPLAY");
+        int [] selectRow =getRows();
+        String [] info = getFlightinfo(selectRow);
+        this.flightInfo.display(info);
     }
     
     public void startBookingInfoGUI(String [] flightInfo){
@@ -79,6 +82,10 @@ public class FlightController implements FlightObserver {
        String [] flightInfo = getFlightinfo(positions);
        startBookingInfoGUI(flightInfo);
     
+    }
+    public int [] getRows(){
+          int [] positions = this.flightGUI.getSelectedRows();
+          return positions;
     }
     public String [] getFlightinfo(int [] positions){
         System.out.println("Flight Info");

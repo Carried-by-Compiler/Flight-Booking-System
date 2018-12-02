@@ -406,6 +406,7 @@ public class FlightGUI extends JFrame {
         oneWayRB.addActionListener(buttonPressListener);
         returnRB.addActionListener(buttonPressListener);
         submitSelection.addActionListener(buttonPressListener);
+        infoButton.addActionListener(buttonPressListener);
     }
     
     public String getDeparture() {
