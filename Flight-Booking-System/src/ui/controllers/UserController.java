@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import ui.FlightGUI;
 import ui.LoginPage;
+import ui.Registration;
 
 /**
  *
@@ -34,17 +35,33 @@ public class UserController {
     private CustomerManager customerManager;
     private AirlineManager airlineManager;
     private LoginPage loginPage;
+    private Registration register;
     
     
-    public UserController(CustomerManager customerManager, LoginPage loginPage){
+    public UserController(CustomerManager customerManager, LoginPage loginPage, Registration register){
         this.customerManager = customerManager;
         this.loginPage = loginPage;
+        this.register = register;
         
         this.loginPage.addSubmitListener(new SubmitListener());
+        this.register.addSubmitListener(new SubmitListener());
     }
+    
     
     public void start(){
         loginPage.display();
+    }
+    
+    public void regPage(){
+        register.display();
+    }
+    
+    public void closelogin(){
+        loginPage.closeLogin();
+    }
+    
+    public void closeReg(){
+        register.close();
     }
     
     public void checkLogin(){
@@ -64,6 +81,31 @@ public class UserController {
             }
     }
     
+    public void checkRegister(){
+        String name = register.getName();
+        String surname = register.getSurname();
+        String email = register.getEmail();
+        String password = register.getPassword();
+        String cpass = register.getConPassword();
+        
+        if(password.equals("") || cpass.equals("") || (!cpass.equalsIgnoreCase(password)))
+        {
+            JOptionPane.showMessageDialog(null, "Password words must match and cannot be empty","Unable to Register",JOptionPane.WARNING_MESSAGE);
+        }
+        else if(name.equals("") || surname.equals("") || email.equals("")){
+            JOptionPane.showMessageDialog(null, "You cannot leave any field blank","Unable to Register",JOptionPane.WARNING_MESSAGE);
+        }
+        
+        else{
+            //Idealy we would use a database to to set an id automatically for the user but in this case we are just using a randome number simulator as proxy
+            int random = (int)(Math.random() * 50 + 1);
+            CustomerManager cm = new CustomerManager();
+            cm.addCustomer(random ,name, surname, email, password);
+            JOptionPane.showMessageDialog(null, "You have been Registered, please login","Register successful",JOptionPane.OK_OPTION);
+            //start();
+        }
+    }
+    
     private class SubmitListener implements ActionListener {
 
         @Override
@@ -73,6 +115,13 @@ public class UserController {
             switch(source) {
                 case "Login":
                     checkLogin();
+                    break;
+                case "Register":
+                    checkRegister();
+                    break;
+                case "Register Account":
+                    regPage();
+                    closelogin();
                     break;
             }        
         }

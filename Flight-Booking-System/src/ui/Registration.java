@@ -9,6 +9,7 @@ package ui;
 //Validate input
 
 import business_layer.CustomerManager;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -21,12 +22,12 @@ import javax.swing.JOptionPane;
  *
  * @author Sophia
  */
-public class Registartion extends javax.swing.JFrame {
+public class Registration extends javax.swing.JFrame {
 
     /**
      * Creates new form Registartion
      */
-    public Registartion() {
+    public Registration() {
         initComponents();
     }
 
@@ -192,26 +193,34 @@ public class Registartion extends javax.swing.JFrame {
         String password = jTextField4.getText();
         String confirm = jTextField5.getText();
         
-        valReg(firstName, lastName, email, password, confirm);
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public static void writeToFile(String filename, String fileContent) throws FileNotFoundException {
-        FileOutputStream out; // declare a file output object
-        PrintStream p; // declare a print stream object
-
-        try {
-            // Create a new file output stream connected to "myfile.txt"
-            out = new FileOutputStream(filename);
-
-            // Connect print stream to the output stream
-            p = new PrintStream( out );
-            p.println(fileContent);
-            p.close();
-        } catch (Exception e) {
-            String errMsg = "Error writing to the file " + filename;
-            System.err.println (errMsg);
-        }
+    public String getName(){
+        return this.jTextField1.getText();
+    }
+    
+    public String getSurname(){
+          return this.jTextField2.getText();
+    }
+    
+    public String getEmail(){
+          return this.jTextField3.getText();
+    }
+    
+    public String getPassword(){
+        return this.jTextField4.getText();
+    }
+    
+    public String getConPassword(){
+        return this.jTextField5.getText();
+    }
+    
+    public void display() {    
+        this.setVisible(true);
+    }
+    
+    public void close(){
+        this.dispose();
     }
     
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -235,23 +244,29 @@ public class Registartion extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Registartion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Registartion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Registartion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Registartion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Registration.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Registartion().setVisible(true);
+                new Registration().setVisible(true);
             }
         });
     }
+    
+    public void addSubmitListener(ActionListener submitlistener) {
+        jButton1.addActionListener(submitlistener);
+    }
+    
     
     
     public void valReg(String fname, String sname, String email, String password, String conpass){

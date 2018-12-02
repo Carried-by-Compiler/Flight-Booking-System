@@ -168,7 +168,7 @@ public class LoginPage extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
            this.dispose();
-           Registartion reg = new Registartion();
+           Registration reg = new Registration();
            reg.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
