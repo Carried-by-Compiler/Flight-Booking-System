@@ -30,10 +30,11 @@ public class Main {
         AirlineManager aManager = new AirlineManager();
         CustomerManager cManager = new CustomerManager();
         LoginPage lPage = new LoginPage();
+        Registration reg = new Registration();
         
         
      //   FlightController fController = new FlightController(fManager, flightGUI);
-        UserController cController = new UserController(cManager, lPage);
+        UserController cController = new UserController(cManager, lPage, reg);
         AirlineController aController = new AirlineController();
         
         //flightGUI.display();
