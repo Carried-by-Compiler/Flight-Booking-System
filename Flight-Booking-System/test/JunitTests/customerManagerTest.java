@@ -47,28 +47,26 @@ public class customerManagerTest {
     public CustomerManager cm = new CustomerManager();
     @Test
     public void testValidInfoCustomerSearch(){
-        int customerID = cm.searchCustomer("e@yahoo.com","e");
-        assertEquals(3, customerID);
+        assertEquals(1,cm.searchCustomer("DAVE@GMAIL.COM", "MA-BOY"));
+        assertEquals(3, cm.searchCustomer("e@yahoo.com","e"));
         
     }
     
     @Test
     public void testInvaidInfoCustomerSearch(){
-      int customerID = cm.searchCustomer("e", "e");
-      assertEquals(-1,customerID);
+      assertEquals(-1,cm.searchCustomer("e@yahoo.com", "e@yahoo.com"));
+      assertEquals(-1,cm.searchCustomer("e", "e"));
+      assertEquals(-1,cm.searchCustomer("",""));
     }
     
     @Test 
     public void testValidIntCustomerSearch(){
-      String info = cm.searchCustomer(3);
-      String expectedOutCome = "Customer{id=3, fName=OWEN, lName=CASSIDY, email=e@yahoo.com}";
-      assertEquals(expectedOutCome,info);
+      assertEquals("Customer{id=1, fName=DAVE, lName=DOUGH, email=DAVE@GMAIL.COM}",cm.searchCustomer(1));
+      assertEquals("Customer{id=3, fName=OWEN, lName=CASSIDY, email=e@yahoo.com}",cm.searchCustomer(3));
 
     } 
     @Test
-    public void testInvalidIntCustomerSearch(){
-       String info = cm.searchCustomer(1000);
-       String expectedOutCome = "Customer does not exist";
-       assertEquals(expectedOutCome, info);
+    public void testInvalidIntCustomerSearch(){      
+       assertEquals("Customer does not exist", cm.searchCustomer(1000));
     }
 }

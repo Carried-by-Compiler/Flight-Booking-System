@@ -48,7 +48,9 @@ public class AirlineManagerTest {
     
     @Test
     public void testSearchAirlineByID(){
-       String response = ar.searchAirline(1);
-       assertEquals("AERLINGUS",response);
+      
+       assertEquals("AERLINGUS",ar.searchAirline(1));
+       assertEquals("RYANAIR",ar.searchAirline(2));
+       assertEquals("KML",ar.searchAirline(10));
     }
 }
